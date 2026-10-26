@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Navgrah Agarbatti Udyog - Order Assistant</title>
+<style>
+:root{--brand:#c2410c;--dark:#7c2d12;--line:#dcdfe4;--night:#1c1a2b;--ash:#eceef0;--ink:#1d1b2a;--smoke:#666a7d;--ok:#1e7a46;--warn:#a15c00;--serif:"Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;--g:#c2410c}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans Devanagari",sans-serif;background:#d3d6dc;color:var(--ink);display:flex;justify-content:center}
+button{font-family:inherit}
+:focus-visible{outline:3px solid #2563eb;outline-offset:2px}
+.hidden{display:none!important}
+.app{width:100%;max-width:520px;height:var(--vh,100dvh);display:flex;flex-direction:column;background:var(--ash);box-shadow:0 0 40px rgba(28,26,43,.2)}
+header{background:radial-gradient(120% 150% at 100% 0%,#3d3158 0,transparent 55%),var(--night);color:#f1ede4;padding:12px 14px 6px;border-bottom:3px solid var(--brand)}
+.hrow{display:flex;align-items:center;gap:12px}
+#logoImg{width:50px;height:50px;border-radius:50%;object-fit:contain;background:#f6f1e6;border:2px solid rgba(242,176,30,.45);flex:none}
+.hrow .t{min-width:0}
+header h1{font-family:var(--serif);font-size:25px;font-weight:700;letter-spacing:.03em;line-height:1.05;color:#fff6e0}
+#brandSub{font-size:13.5px;color:#f2b01e;margin-top:2px;font-weight:600}
+#modeNote{font-size:11.5px;color:#a9a6bd;margin-top:1px}
+.grahas{display:flex;justify-content:space-between;margin-top:4px}
+.gdot{width:34px;height:32px;border:none;background:none;display:grid;place-items:center;cursor:pointer;border-radius:50%}
+.gdot i{width:13px;height:13px;border-radius:50%;background:var(--c);box-shadow:0 0 0 2px rgba(255,255,255,.14),0 0 9px var(--c);animation:ignite .8s ease-out both;animation-delay:var(--d)}
+@keyframes ignite{from{transform:scale(.1);opacity:0}60%{transform:scale(1.5);opacity:1}to{transform:scale(1)}}
+#chat{flex:1;overflow-y:auto;padding:14px 12px;display:flex;flex-direction:column;gap:10px;background:repeating-linear-gradient(90deg,transparent 0 26px,rgba(28,26,43,.035) 26px 27px),var(--ash);overscroll-behavior:contain}
+#chat>*{flex-shrink:0}
+.msg{max-width:88%;padding:10px 14px;font-size:15px;line-height:1.5;white-space:pre-wrap;word-wrap:break-word}
+.bot{align-self:flex-start;background:#fff;border:1px solid var(--line);border-radius:4px 16px 16px 16px}
+.user{align-self:flex-end;background:var(--night);color:#fff;border-radius:16px 4px 16px 16px}
+.chips{display:flex;flex-wrap:wrap;gap:7px;align-self:flex-start;max-width:98%}
+.chip{border:1.5px solid var(--night);color:var(--night);background:#fff;padding:9px 14px;min-height:42px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;font-family:inherit}
+.chip:active{background:var(--night);color:#fff}
+.menugrid{display:grid;grid-template-columns:1fr 1fr;width:98%;max-width:98%}
+.menugrid .chip{justify-content:center;text-align:center;line-height:1.3}
+.menugrid .chip:nth-child(-n+6){border-width:2px;font-weight:700;box-shadow:0 2px 0 rgba(28,26,43,.12)}
+.menugrid .chip:nth-child(1){background:#ffe3cc;border-color:#e8590c;color:#7c2d12}
+.menugrid .chip:nth-child(2){background:#fff1b8;border-color:#d99a00;color:#6b4a00}
+.menugrid .chip:nth-child(3){background:#d4f1df;border-color:#1e7a46;color:#14532d}
+.menugrid .chip:nth-child(4){background:#dbe6ff;border-color:#3b5ba5;color:#1e3a8a}
+.menugrid .chip:nth-child(5){background:#c2410c;border-color:#7c2d12;color:#fff}
+.menugrid .chip:nth-child(6){background:#fbdcea;border-color:#c0457a;color:#7a1f4b}
+.menugrid .chip:nth-child(-n+6):active{filter:brightness(.9);transform:translateY(1px)}
+.chip.colr{border-width:2px;font-weight:700;box-shadow:0 2px 0 rgba(28,26,43,.12)}
+.chip.colr:active{background:var(--night)!important;color:#fff!important}
+.chip.solid{background:var(--brand);border-color:var(--brand);color:#fff}
+.chip.faq{border-style:dashed;border-color:var(--smoke);color:#4a4e60;font-weight:500}
+.chip.wa{background:#17803f;border-color:#17803f;color:#fff}
+.card{align-self:flex-start;width:92%;background:#fff;border:1px solid var(--line);border-top:4px solid var(--g);border-radius:14px;overflow:hidden}
+.card img.pimg{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;background:#e6e1d6;cursor:zoom-in}
+.card .body{padding:13px 15px 15px;font-size:14px;line-height:1.55}
+.card h3{font-family:var(--serif);font-size:20px;line-height:1.2}
+.card .cat{font-size:12.5px;color:var(--smoke)}
+.card .desc{margin-top:8px;color:#34374a}
+.spec{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:13.5px;margin:10px 0 0;padding-top:10px;border-top:1px solid var(--line)}
+.spec dt{color:var(--smoke)}
+.pricebox{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.pl{border:1px solid var(--line);border-radius:10px;padding:8px 10px;display:grid;gap:1px;align-content:start}
+.pl span{font-size:12px;color:var(--smoke)}
+.pl b{font-family:var(--serif);font-size:22px;line-height:1.15}
+.pl small{font-size:12px;color:var(--smoke);line-height:1.35}
+.pills{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.pill{display:inline-block;font-size:12px;font-weight:600;padding:3px 10px;border-radius:999px;background:#e8eaee;color:#42465a}
+.pill.ok{background:#dff1e6;color:var(--ok)}
+.pill.warn{background:#fcefd3;color:var(--warn)}
+.ok{color:var(--ok);font-weight:600}.warn{color:var(--warn);font-weight:600}
+.row{display:flex;align-items:center;gap:8px;padding:9px 0;border-top:1px solid var(--line);font-size:14px}
+.row:first-of-type{border-top:none}
+.row .nm{flex:1;min-width:0}
+.row small{display:block;color:var(--smoke);font-size:12.5px}
+.row button{width:32px;height:32px;border-radius:8px;border:1.5px solid var(--night);background:#fff;color:var(--night);font-size:16px;font-weight:700;cursor:pointer}
+.total{margin-top:10px;padding-top:10px;border-top:2px solid var(--night);font-size:14px;display:grid;gap:3px}
+.total .big{font-family:var(--serif);font-weight:700;font-size:18px;color:var(--dark)}
+.note{background:#f4f1ea;border-left:3px solid #f2b01e;color:#5b4a1d;border-radius:6px;padding:8px 10px;font-size:12.5px;margin-top:10px;line-height:1.45}
+.quick{display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-top:1px solid var(--line)}
+.quick button{border:none;background:none;padding:11px 4px;min-height:44px;font-size:13.5px;font-weight:600;color:#4a4e60;cursor:pointer}
+.quick button+button{border-left:1px solid var(--line)}
+.quick button:active{background:var(--ash)}
+.bar{display:flex;gap:8px;padding:8px 10px;background:#fff;border-top:1px solid var(--line)}
+.bar input{flex:1;min-width:0;font-size:16px;padding:12px 14px;border:1.5px solid #cfd3da;border-radius:12px;outline:none;background:#f7f8f9;font-family:inherit}
+.bar input:focus{border-color:var(--night);background:#fff}
+.bar button{width:48px;height:48px;border:none;border-radius:12px;background:var(--night);color:#f2b01e;font-size:20px;cursor:pointer}
+#toast{position:fixed;left:50%;top:84px;transform:translateX(-50%);background:var(--night);color:#fff;padding:8px 16px;border-radius:10px;font-size:14px;z-index:99;display:none;max-width:90%}
+#lb{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:80;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:12px}
+#lb img{max-width:100%;max-height:80vh;border-radius:8px;background:#fff}
+#lb span{color:#fff;font-size:14px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.sizes{margin-top:10px;padding-top:10px;border-top:1px solid var(--line);font-size:13.5px}
+.sizes>b{display:block;margin-bottom:2px}
+.szcard{border:1px solid #e4d3c3;border-radius:10px;padding:10px;background:#fff;display:grid;gap:6px}
+/* admin */
+.admin{position:fixed;inset:0;z-index:50;background:#f4efe9;display:flex;justify-content:center;overflow-y:auto}
+.apanel{width:100%;max-width:560px;min-height:100%;background:#fff;display:flex;flex-direction:column}
+.ahead{background:#2b2118;color:#fff;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:2}
+.tabs{display:flex;border-bottom:1px solid #eee;position:sticky;top:56px;background:#fff;z-index:2}
+.tabs button{flex:1;padding:12px 2px;border:none;background:none;font-size:13px;font-weight:600;color:#7d5a35;border-bottom:3px solid transparent;cursor:pointer}
+.tabs button.on{color:var(--brand);border-color:var(--brand)}
+.abody{padding:14px;display:grid;gap:10px;align-content:start;padding-bottom:70px}
+.abody label{font-size:13px;font-weight:600;color:#6b4e3a;margin-top:6px;display:block}
+.abody input,.abody textarea,.abody select{width:100%;font-size:16px;padding:10px 12px;border:1.5px solid #e4d3c3;border-radius:10px;font-family:inherit;background:#fffaf4;outline:none}
+.abody input[type=checkbox]{width:22px;height:22px;flex:none}
+.abody textarea{min-height:80px;resize:vertical}
+.abody small{color:#7d5a35;font-size:12.5px;line-height:1.45;display:block}
+.chk{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:600;color:#6b4e3a}
+.abtn{border:1.5px solid var(--brand);background:#fff;color:var(--dark);padding:10px 14px;min-height:42px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer}
+.abtn.pri{background:var(--brand);color:#fff}
+.abtn.sm{padding:6px 10px;min-height:36px;font-size:13px}
+.abtn.del{border-color:#c0392b;color:#c0392b}
+.abtn.full{width:100%}
+.arow{display:flex;align-items:center;gap:10px;padding:8px;border:1px solid #eee;border-radius:12px}
+.arow img{width:50px;height:50px;border-radius:8px;object-fit:cover;background:#eee;flex:none}
+.ainfo{flex:1;min-width:0}
+.ainfo b{display:block;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ainfo small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.prev{width:100%;max-height:200px;object-fit:cover;border-radius:10px;background:#eee}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap}
+.box{border:1px dashed #d8c3ae;border-radius:12px;padding:12px;background:#fffaf4;display:grid;gap:8px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.loginbox{margin:auto;padding:24px;display:grid;gap:12px;width:100%}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="hrow">
+      <img id="logoImg" alt="Logo">
+      <div class="t"><h1 id="brandH"></h1><p id="brandSub"></p><p id="modeNote">Order assistant</p></div>
+    </div>
+    <div class="grahas" id="grahas" role="group" aria-label="Navgrah: kisi bhi grah par dabakar uski agarbatti dekhein"></div>
+  </header>
+  <div id="chat" role="log" aria-live="polite"></div>
+  <div class="quick">
+    <button data-q="menu">Menu</button>
+    <button data-q="products">Products</button>
+    <button data-q="cart">Cart (<span id="cartN">0</span>)</button>
+    <button data-q="wa">WhatsApp</button>
+  </div>
+  <form class="bar" id="bar" autocomplete="off">
+    <input id="inp" type="text" placeholder="Yahan likhiye..." maxlength="500" aria-label="Aapka message">
+    <button type="submit" id="sendBtn" aria-label="Bhejein">➤</button>
+  </form>
+</div>
+<div id="toast"></div>
+<div id="lb" class="hidden"><img alt=""><span></span></div>
+<div id="admin" class="admin hidden"><div class="apanel" id="apanel"></div></div>
+
+<script>
+'use strict';
+/* =====================================================================
+   NAVGRAH AGARBATTI UDYOG - ORDER ASSISTANT (ek hi file)
+   - Bina AI ke poora chalta hai. Koi API key is file me nahi hai.
+   - Sab badlav Admin se hote hain (products, price, Q&A, company, backup).
+   ===================================================================== */
+const UNITS = ['packet','kg','piece','box','carton','set'];
+const STATES = ['Maharashtra','Gujarat','Madhya Pradesh','Rajasthan','Uttar Pradesh','Karnataka','Telangana','Delhi'];
+const CATS = ['Agarbatti','Dhoop cone','Dhoop kandi','Gili dhoop','Sambrani cup','Loban agarbatti'];
+
+const P0 = [
+ ['Surya Agarbatti','Surya (Sun) - Ravivar. Surya dev ki puja ke liye','Kesar + Chandan','surya,sun,suraj,ravi'],
+ ['Chandra Agarbatti','Chandra (Moon) - Somvar. Shiv/Chandra puja ke liye','Chameli + Kapoor','chandra,moon,chand,som'],
+ ['Mangal Agarbatti','Mangal (Mars) - Mangalvar. Hanuman ji ki puja ke liye','Lal Chandan + Loban','mangal,mars'],
+ ['Budh Agarbatti','Budh (Mercury) - Budhvar. Ganesh ji ki puja ke liye','Tulsi + Elaichi','budh,mercury,buddh'],
+ ['Guru Agarbatti','Guru (Jupiter) - Guruvar. Vishnu/Guru puja ke liye','Haldi + Chandan','guru,jupiter,brihaspati'],
+ ['Shukra Agarbatti','Shukra (Venus) - Shukravar. Lakshmi Maa ki puja ke liye','Gulab + Kewda','shukra,venus'],
+ ['Shani Agarbatti','Shani (Saturn) - Shanivar. Shani dev ki puja ke liye','Guggal + Loban','shani,saturn,shanidev'],
+ ['Rahu Agarbatti','Rahu dosh shanti puja ke liye','Agar + Neel Kamal','rahu'],
+ ['Ketu Agarbatti','Ketu dosh shanti puja ke liye','Dhoop + Sandal','ketu']
+];
+function defaultProducts(){
+  const a = P0.map((r,i)=>({id:i+1,name:r[0],category:'Agarbatti',desc:r[1],smell:r[2],pack:'1 Packet = 20 sticks',unit:'packet',price:60,wprice:null,minq:null,confirmed:false,stock:'unknown',alias:r[3].split(','),img:'',sizes:[]}));
+  a.push({id:10,name:'Navgrah Combo Pack',category:'Agarbatti',desc:'Sabhi 9 Grah ek saath. Poore Navgrah puja ke liye',smell:'9 alag khushbu',pack:'9 Packets (har grah ka 1)',unit:'set',price:500,wprice:null,minq:null,confirmed:false,stock:'unknown',alias:['combo','navgrah combo','9 grah','nau grah'],img:'',sizes:[]});
+  return a;
+}
+const DEFAULT = {
+  v:3, updated:0, brand:'Navgrah Agarbatti Udyog', owner:'918329323516',
+  welcome:'', about:'', address:'', hours:'', areas:'',
+  delivery:{confirmed:false,amount:null,note:''},
+  bulk:{minKg:40,maxKg:500,boxKg:31},
+  aiEndpoint:'', aiEnabled:false, logo:'', categories:CATS.slice(),
+  products:defaultProducts(),
+  faqs:[
+   {topic:'delivery',q:'Delivery kitne din me hoti hai?',k:['delivery','kitne din','shipping','courier','kab tak'],a:'Delivery ki jaankari order confirm hone par hum WhatsApp par bata denge. '},
+   {topic:'payment',q:'Payment kaise karna hai?',k:['payment','paise','upi','cod','pay'],a:'Payment ka tarika order confirm hone par WhatsApp par bataya jayega. '},
+   {topic:'company',q:'Aapki company kya banati hai?',k:['company','about','kya banate','kaun ho'],a:''},
+   {topic:'minqty',q:'Minimum order quantity kitni hai?',k:['minimum order','moq','min order'],a:''},
+   {topic:'returns',q:'Return ya damaged product',k:['return','damage','refund'],a:''}
+  ]
+};
+
+/* ---------- helpers ---------- */
+const $ = id => document.getElementById(id);
+const esc = s => String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const clone = o => JSON.parse(JSON.stringify(o));
+const r2 = x => Math.round(x*100)/100;
+const money = x => '₹'+(Number.isInteger(x)?x:x.toFixed(2));
+const str = (v,n) => String(v==null?'':v).trim().slice(0,n||200);
+const cap = t => t.replace(/(^|\s)([a-z])/g,(m,a,b)=>a+b.toUpperCase());
+const norm = t => String(t||'').toLowerCase().replace(/[^\p{L}\p{N}\p{M}\s]/gu,' ').replace(/\s+/g,' ').trim();
+const num = v => { if(v===null||v===undefined||v==='') return null; const m=String(v).replace(/,/g,'').match(/\d+(\.\d+)?/); return m?parseFloat(m[0]):null; };
+function lev(a,b,max){ if(Math.abs(a.length-b.length)>max) return max+1; let prev=Array.from({length:b.length+1},(_,j)=>j); for(let i=1;i<=a.length;i++){ const cur=[i]; let mn=i; for(let j=1;j<=b.length;j++){ cur[j]=Math.min(prev[j]+1,cur[j-1]+1,prev[j-1]+(a[i-1]===b[j-1]?0:1)); if(cur[j]<mn) mn=cur[j]; } if(mn>max) return max+1; prev=cur; } return prev[b.length]; }
+const near = (t,w) => t===w || (w.length>=5 && t.startsWith(w) && t.length<=w.length+3 && [...t.slice(w.length)].every(c=>c===w[w.length-1])) || (w.length>=5 && t.length>=4 && lev(t,w,w.length>=9?2:1)<=(w.length>=9?2:1));
+const has = (n,words) => { const toks=n.split(' '); return words.some(w=>{ w=String(w); if(w.includes(' ')) return (' '+n+' ').includes(' '+w+' ')||n.includes(w); if(toks.includes(w)) return true; if(w.length>4&&n.includes(w)) return true; return w.length>=6&&toks.some(t=>near(t,w)); }); };
+const getP = id => DATA.products.find(p=>p.id===id);
+function toast(m){ const e=$('toast'); e.textContent=m; e.style.display='block'; clearTimeout(e._t); e._t=setTimeout(()=>e.style.display='none',1800); }
+function safeImg(u){ u=String(u||'').trim(); if(!u) return ''; if(/^data:image\/(png|jpe?g|webp|gif);base64,[A-Za-z0-9+/=]+$/i.test(u)) return u; if(/^https?:\/\/[^\s"'<>]+$/i.test(u)) return u; if(/^[\w\-./ %]+$/.test(u)&&!u.startsWith('//')) return u; return ''; }
+function validUrl(u){ u=String(u||'').trim(); return /^https:\/\/[^\s"'<>]+$/i.test(u); }
+
+/* ---------- data ---------- */
+let DATA = clone(DEFAULT);
+const LS='navgrah_simple_v1', LOCK='navgrah_simple_lock';
+const lsGet = k => { try{ return JSON.parse(localStorage.getItem(k)); }catch(e){ return null; } };
+const lsSet = (k,v) => { try{ localStorage.setItem(k,JSON.stringify(v)); return true; }catch(e){ return false; } };
+function normInch(t){ return String(t==null?'':t).toLowerCase().replace(/inch(es)?|["”″]|\bin\b/g,' ').replace(/\s+/g,' ').trim().slice(0,10); }
+function cleanSizes(a){ const seen=new Set(), out=[]; (Array.isArray(a)?a:[]).forEach(z=>{ z=z||{}; const inch=normInch(z.inch); if(!inch||seen.has(inch)) return; seen.add(inch); out.push({inch,price:num(z.price),wprice:num(z.wprice),minq:num(z.minq)}); }); return out.slice(0,20); }
+function cleanQopts(a){ const arr=Array.isArray(a)?a:String(a||'').split(','); const out=[]; arr.forEach(x=>{ const n=num(x); if(n>0&&n<=100000&&!out.includes(n)) out.push(n); }); return out.slice(0,8); }
+function cleanProduct(p,i){
+  p=p||{};
+  return {id:Number.isFinite(+p.id)&&+p.id>0?Math.floor(+p.id):i+1,name:str(p.name,80),category:str(p.category,40)||'Agarbatti',desc:str(p.desc,500),smell:str(p.smell,80),pack:str(p.pack,120),
+    unit:UNITS.includes(p.unit)?p.unit:'packet',price:num(p.price),wprice:num(p.wprice),minq:num(p.minq),confirmed:p.confirmed===true,
+    stock:['available','out','unknown'].includes(p.stock)?p.stock:'unknown',
+    alias:(Array.isArray(p.alias)?p.alias:String(p.alias||'').split(',')).map(s=>str(s,40).toLowerCase()).filter(Boolean).slice(0,30),img:safeImg(p.img),sizes:cleanSizes(p.sizes),omin:(num(p.omin)>0?num(p.omin):null),qopts:cleanQopts(p.qopts)};
+}
+function sanitize(j){
+  if(!j||typeof j!=='object'||!Array.isArray(j.products)) return null;
+  const d=clone(DEFAULT);
+  d.updated=Number(j.updated)||0; d.brand=str(j.brand,60)||d.brand;
+  d.owner=String(j.owner||d.owner).replace(/\D/g,'').slice(0,15)||d.owner;
+  ['welcome','about','address','hours','areas'].forEach(k=>d[k]=str(j[k],1000));
+  const dl=j.delivery||{}; d.delivery={confirmed:dl.confirmed===true&&num(dl.amount)!==null,amount:num(dl.amount),note:str(dl.note,200)};
+  const bk=j.bulk||{}, mn=num(bk.minKg), mx=num(bk.maxKg), bx=num(bk.boxKg);
+  d.bulk={minKg:mn>0?mn:40,maxKg:mx>0?mx:500,boxKg:bx>0?bx:31}; if(d.bulk.maxKg<d.bulk.minKg) d.bulk={minKg:40,maxKg:500,boxKg:d.bulk.boxKg};
+  d.aiEndpoint=validUrl(j.aiEndpoint)?String(j.aiEndpoint).trim():''; d.aiEnabled=j.aiEnabled===true&&!!d.aiEndpoint;
+  d.logo=safeImg(j.logo);
+  d.products=j.products.slice(0,500).map(cleanProduct).filter(p=>p.name);
+  const seen=new Set(); d.products.forEach(p=>{ while(seen.has(p.id)) p.id++; seen.add(p.id); });
+  const cats=Array.isArray(j.categories)?j.categories.map(c=>str(c,40)).filter(Boolean):CATS.slice();
+  d.products.forEach(p=>{ if(!cats.some(c=>c.toLowerCase()===p.category.toLowerCase())) cats.push(p.category); });
+  d.categories=[...new Set(cats)];
+  if(Array.isArray(j.faqs)) d.faqs=j.faqs.map(f=>({topic:str(f.topic,20),q:str(f.q,200),k:(Array.isArray(f.k)?f.k:[]).map(x=>str(x,40).toLowerCase()).filter(Boolean).slice(0,30),a:str(f.a,1500)})).filter(f=>f.q).slice(0,200);
+  return d;
+}
+async function loadData(){
+  let best=clone(DEFAULT);
+  try{ const r=await fetch('data.json?'+Date.now(),{cache:'no-store'}); if(r.ok){ const s=sanitize(await r.json()); if(s&&s.updated>=best.updated) best=s; } }catch(e){}
+  const l=sanitize(lsGet(LS)); if(l&&l.updated>best.updated) best=l;
+  DATA=best; cart=cart.filter(l=>getP(l.pid));
+}
+function persist(){
+  DATA.updated=Date.now();
+  if(!lsSet(LS,DATA)){ alert('Data save nahi ho paya (storage full ya blocked). Photos chhoti karein ya Backup tab se data.json download karein.'); return false; }
+  return true;
+}
+
+/* ---------- chat output ---------- */
+const chat=$('chat'), inp=$('inp');
+const down = () => { chat.scrollTop=chat.scrollHeight; };
+const clearChips = () => document.querySelectorAll('.chips:not([data-keep])').forEach(x=>x.remove());
+function bot(t){ const d=document.createElement('div'); d.className='msg bot'; d.textContent=t; chat.appendChild(d); down(); while(chat.children.length>200) chat.removeChild(chat.firstChild); }
+function user(t){ clearChips(); const d=document.createElement('div'); d.className='msg user'; d.textContent=t; chat.appendChild(d); down(); }
+function card(html){ const c=document.createElement('div'); c.className='card'; c.innerHTML=html; chat.appendChild(c); down(); return c; }
+const hexA=(h,a)=>{ const n=parseInt(String(h).slice(1),16)||0; return `rgba(${(n>>16)&255},${(n>>8)&255},${n&255},${a})`; };
+function chips(list,grid,twoCol){
+  const w=document.createElement('div'); w.className='chips'+((grid||twoCol)?' menugrid':'');
+  list.forEach((o,idx)=>{
+    let b;
+    if(o.href){ b=document.createElement('a'); b.href=o.href; b.target='_blank'; b.rel='noopener noreferrer'; w.dataset.keep='1'; if(o.after) b.addEventListener('click',()=>setTimeout(o.after,300)); }
+    else{ b=document.createElement('button'); b.type='button'; if(o.keep) w.dataset.keep='1'; b.onclick=()=>{ if(!o.keep) clearChips(); if(o.say!==false&&!o.keep) user(o.label); o.fn(); }; }
+    b.className='chip '+(o.cls||'')+(o.color?' colr':''); b.textContent=o.label; if(o.color){ b.style.background=hexA(o.color,.2); b.style.borderColor=o.color; b.style.color='#1d1b2a'; } if(grid){ const h=grid/2; if(idx<grid){ b.style.gridColumn=idx<h?'1':'2'; b.style.gridRow=String((idx%h)+1); } else b.style.gridColumn='1 / -1'; } w.appendChild(b);
+  });
+  chat.appendChild(w); down();
+}
+
+/* ---------- WhatsApp ---------- */
+function waNumber(){ let n=String(DATA.owner||'').replace(/\D/g,''); if(n.length===10) n='91'+n; return n.length>=11?n:''; }
+function waLink(t){ const n=waNumber(); return n?`https://wa.me/${n}?text=${encodeURIComponent(t)}`:''; }
+function waChip(t,label,after){ const h=waLink(t); return h?{label:label||'WhatsApp par company se baat karein',cls:'wa',href:h,after}:{label:'⚠ WhatsApp number set nahi hai',cls:'faq',say:false,fn:()=>bot('Company ka WhatsApp number set nahi hai. Admin ko Company tab me number daalna hoga.')}; }
+const HELLO = () => `Namaste, mujhe ${DATA.brand} ke baare me jaankari chahiye.`;
+
+/* ---------- images ---------- */
+function placeholder(name){
+  const svg=`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'><rect width='400' height='300' fill='#f6ecdc'/><g stroke='#c8782a' stroke-width='4' stroke-linecap='round' opacity='.55'><line x1='160' y1='215' x2='152' y2='105'/><line x1='200' y1='215' x2='200' y2='90'/><line x1='240' y1='215' x2='248' y2='105'/></g><rect x='130' y='215' width='140' height='12' rx='6' fill='#c8782a' opacity='.55'/><text x='200' y='40' font-size='20' font-family='sans-serif' font-weight='bold' text-anchor='middle' fill='#7a3b1d'>${esc(name||'')}</text><text x='200' y='260' font-size='16' font-family='sans-serif' text-anchor='middle' fill='#7a3b1d'>Product photo jald upload hogi</text></svg>`;
+  return 'data:image/svg+xml;utf8,'+encodeURIComponent(svg);
+}
+function defaultLogo(){
+  const svg=`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='#fbf6ec'/><circle cx='50' cy='50' r='46' fill='none' stroke='#c8782a' stroke-width='2'/><circle cx='50' cy='50' r='24' fill='#fbf6ec' stroke='#c8782a' stroke-width='1.6'/><path d='M36 52h28c0 9-6 14-14 14s-14-5-14-14z' fill='#c8782a'/><rect x='42' y='70' width='16' height='3' rx='1' fill='#c8782a'/></svg>`;
+  return 'data:image/svg+xml;utf8,'+encodeURIComponent(svg);
+}
+$('lb').addEventListener('click',()=>$('lb').classList.add('hidden'));
+function openLb(src,t){ $('lb').querySelector('img').src=src; $('lb').querySelector('span').textContent=(t||'')+' (band karne ke liye dabayein)'; $('lb').classList.remove('hidden'); }
+
+/* ---------- cart & price ---------- */
+let cart=[]; try{ cart=(JSON.parse(sessionStorage.getItem('ng_cart')||'[]')||[]).filter(i=>i&&+i.pid>0&&+i.qty>0&&UNITS.includes(i.unit)).map(i=>({pid:i.pid,qty:i.qty,unit:i.unit,size:normInch(i.size)})); }catch(e){ cart=[]; }
+let customer={name:'',phone:null,city:'',state:null};
+function saveCart(){ try{ sessionStorage.setItem('ng_cart',JSON.stringify(cart)); }catch(e){} $('cartN').textContent=cart.length; }
+function validQty(q,unit){ q=Number(q); if(!isFinite(q)||q<=0||q>100000) return null; return unit==='kg'?r2(q):(Number.isInteger(q)?q:null); }
+const szs = p => (p&&p.sizes)||[];
+const pn = (p,size) => (p?p.name:'?')+(size?` (${size} inch)`:'');
+function rateInfo(p,l){ const s=szs(p); if(!s.length) return {price:p.price,wprice:p.wprice,minq:p.minq}; const z=s.find(x=>x.inch===String(l.size||'')); return z?{price:z.price,wprice:z.wprice,minq:z.minq}:null; }
+function linePrice(l){
+  const p=getP(l.pid); if(!p) return {ok:false,reason:'ab catalogue me nahi hai'};
+  if(l.unit!==p.unit) return {ok:false,reason:`rate ${p.unit} ke hisaab se hai, ${l.unit} ka rate company confirm karegi`};
+  const ri=rateInfo(p,l); if(!ri) return {ok:false,reason:'ye inch size catalogue me nahi mila, company confirm karegi'};
+  let rate=ri.price, kind='retail';
+  if(ri.wprice!=null&&ri.minq&&l.qty>=ri.minq){ rate=ri.wprice; kind='wholesale'; }
+  if(rate==null) return {ok:false,reason:'price company se confirm hoga'};
+  if(!p.confirmed) return {ok:false,reason:'price confirm hona baaki (company confirm karegi)'};
+  return {ok:true,rate,kind,amount:r2(rate*l.qty)};
+}
+function calc(){
+  let sub=0,priced=0,unpriced=0;
+  const lines=cart.map(l=>{ const p=getP(l.pid), r=linePrice(l); if(r.ok){ sub+=r.amount; priced++; } else unpriced++; return {l,p,r}; });
+  sub=r2(sub); const d=DATA.delivery, dc=d.confirmed&&d.amount!=null, all=cart.length>0&&unpriced===0;
+  return {lines,sub,priced,unpriced,all,dc,del:dc?d.amount:null,total:all?r2(sub+(dc?d.amount:0)):null};
+}
+function totalsText(c){
+  const o=[];
+  if(c.priced>0) o.push(c.all?`Items total: ${money(c.sub)}`:`Partial subtotal (sirf ${c.priced} item ka confirmed price): ${money(c.sub)}`);
+  else o.push('Items total: abhi calculate nahi ho sakta (price company se confirm hoga)');
+  if(!c.all&&c.priced>0) o.push(`${c.unpriced} item ka price company confirm karegi`);
+  o.push(c.dc?`Delivery charge (confirmed): ${money(c.del)}`:'Delivery charge: company confirm karegi (total me shamil nahi)');
+  if(c.total!=null) o.push(c.dc?`Total (delivery ke saath): ${money(c.total)}`:`Total abhi: ${money(c.total)} + delivery (confirm hona baaki)`);
+  return o;
+}
+const totalsHtml = c => totalsText(c).map((s,i,a)=>`<div${i===a.length-1&&c.total!=null?' class="big"':''}>${esc(s)}</div>`).join('');
+function lineText(x,i){ let s=`${i+1}. ${pn(x.p,x.l.size)} — ${x.l.qty} ${x.l.unit}`; s+=x.r.ok?` × ${money(x.r.rate)} = ${money(x.r.amount)}${x.r.kind==='wholesale'?' (wholesale rate)':''}`:` — ${x.r.reason}`; return s; }
+
+/* ---------- products ---------- */
+const GC={surya:'#e8590c',chandra:'#aab4c8',mangal:'#c0392b',budh:'#2e9e5b',guru:'#f2b01e',shukra:'#e98fb0',shani:'#3b5ba5',rahu:'#5a5566',ketu:'#8d6e4f'};
+const grahColor = p => { const n=norm(p.name+' '+(p.alias||[]).join(' ')); const k=Object.keys(GC).find(x=>n.includes(x)); return k?GC[k]:'#c2410c'; };
+function stockHtml(p){ return p.stock==='available'?'<span class="pill ok">Stock available (company ke record ke anusar)</span>':p.stock==='out'?'<span class="pill warn">Abhi stock me nahi</span>':'<span class="pill">Stock: company se confirm karein</span>'; }
+function priceHtml(p){
+  const flag=p.confirmed?'<span class="pill ok">Price confirmed</span>':'<span class="pill warn">Price confirm hona baaki</span>';
+  const sz=szs(p);
+  if(sz.length){
+    const rows=sz.map(z=>`<div class="row"><div class="nm"><b>${esc(z.inch)} inch</b>${z.wprice!=null?`<small>Wholesale ${money(z.wprice)}/${esc(p.unit)}${z.minq?`, kam se kam ${z.minq} ${esc(p.unit)}`:''}</small>`:''}</div><div style="text-align:right">${z.price!=null?`<b>${money(z.price)}</b>/${esc(p.unit)}`:'<span class="warn">rate company se puchhein</span>'}</div></div>`).join('');
+    return `<div class="sizes"><b>Ye ${sz.length>1?sz.length+' alag-alag inch me':'is inch me'} milti hai:</b>${rows}</div><div class="pills">${flag}${stockHtml(p)}</div>`;
+  }
+  const r=p.price!=null?`<div class="pl"><span>Retail</span><b>${money(p.price)}</b><small>per ${esc(p.unit)}</small></div>`:'<div class="pl"><span>Retail</span><small>Rate company se puchhein</small></div>';
+  const w=p.wprice!=null?`<div class="pl"><span>Wholesale</span><b>${money(p.wprice)}</b><small>per ${esc(p.unit)}${p.minq?`, kam se kam ${p.minq} ${esc(p.unit)}`:', min quantity company batayegi'}</small></div>`:'<div class="pl"><span>Wholesale</span><small>Rate ke liye enquiry bhejein</small></div>';
+  return `<div class="pricebox">${r}${w}</div><div class="pills">${flag}${stockHtml(p)}</div>`;
+}
+function showProduct(p){
+  const spec=(p.smell?`<dt>Khushbu</dt><dd>${esc(p.smell)}</dd>`:'')+(p.pack?`<dt>Packing</dt><dd>${esc(p.pack)}</dd>`:'')+(p.omin?`<dt>Kam se kam order</dt><dd>${p.omin} ${esc(p.unit)}</dd>`:'');
+  const c=card(`<img class="pimg" alt="${esc(p.name)} ki photo" loading="lazy"><div class="body"><h3>${esc(p.name)}</h3><div class="cat">${esc(p.category)}</div>${p.desc?`<p class="desc">${esc(p.desc)}</p>`:''}${spec?`<dl class="spec">${spec}</dl>`:''}${priceHtml(p)}</div>`);
+  c.style.setProperty('--g',grahColor(p));
+  const img=c.querySelector('img'); img.src=p.img||placeholder(p.name); img.onerror=()=>{ img.onerror=null; img.src=placeholder(p.name); }; img.onclick=()=>openLb(img.src,p.name);
+  chips([{label:'Cart me jodein',cls:'solid',fn:()=>startQty(p)},{label:'Aur products',fn:()=>productsMenu('browse')}]);
+}
+function priceListCard(list,title){
+  const rows=list.map(p=>{ const sz=szs(p); if(sz.length) return `<div class="row"><div class="nm">${esc(p.name)}<small>${sz.map(z=>`${esc(z.inch)} inch: ${z.price!=null?money(z.price):'rate nahi'}${z.wprice!=null?` (wholesale ${money(z.wprice)})`:''}`).join(' • ')} per ${esc(p.unit)}</small></div><div style="text-align:right"><span class="${p.confirmed?'ok':'warn'}">${p.confirmed?'confirmed':'baaki'}</span></div></div>`; const pr=p.price!=null?`<b>${money(p.price)}</b>/${esc(p.unit)} <span class="${p.confirmed?'ok':'warn'}">${p.confirmed?'confirmed':'baaki'}</span>`:'<span class="warn">rate nahi</span>'; const w=p.wprice!=null?`<small>Wholesale ${money(p.wprice)}/${esc(p.unit)}${p.minq?`, kam se kam ${p.minq}`:''}</small>`:''; return `<div class="row"><div class="nm">${esc(p.name)}${w}</div><div style="text-align:right">${pr}</div></div>`; }).join('');
+  card(`<div class="body"><h3>${esc(title||'Price list')}</h3>${rows}<div class="note">"confirmed" ka matlab company ne rate pakka kiya hai. "baaki" par final rate company WhatsApp par batayegi.</div></div>`);
+}
+const catsWithProducts = () => DATA.categories.filter(c=>DATA.products.some(p=>p.category.toLowerCase()===c.toLowerCase()));
+const inCat = c => DATA.products.filter(p=>p.category.toLowerCase()===String(c).toLowerCase());
+function productChips(list,after){ chips(list.map(p=>({label:p.name,color:grahColor(p),fn:()=>after(p)})),0,true); }
+function productsMenu(purpose){
+  if(!DATA.products.length){ bot('Abhi catalogue me koi product nahi hai. Company se WhatsApp par puchhein.'); chips([waChip(HELLO())]); return; }
+  const cats=catsWithProducts();
+  const intro=purpose==='order'?'Order ke liye product chuniye ':purpose==='price'?'Kis product ka rate dekhna hai? ':'Hamare products ';
+  const act=p=>{ showProduct(p); if(purpose==='order') startQty(p); };
+  if(cats.length>1){
+    bot(intro+'\nPehle category chuniye:');
+    chips(cats.map(c=>({label:`${c} (${inCat(c).length})`,fn:()=>listCategory(c,purpose)})).concat([{label:'Sabhi products',cls:'faq',fn:()=>{ if(purpose==='price') priceListCard(DATA.products,'Sabhi products ka rate'); productChips(DATA.products,act); }}]));
+  } else { bot(intro); if(purpose==='price') priceListCard(DATA.products,'Price list'); productChips(DATA.products,act); }
+}
+function listCategory(cat,purpose){
+  const items=inCat(cat);
+  if(!items.length){ bot(`${cat} abhi hamare catalogue me nahi hai. Company se puchh sakte hain.`); chips([waChip(`Namaste, kya aapke paas ${cat} available hai?`),{label:'Menu',cls:'faq',fn:goMenu}]); return; }
+  const act=p=>{ showProduct(p); if(purpose==='order') startQty(p); };
+  if(purpose==='price'){ bot(`${cat} ka rate:`); priceListCard(items,cat+' - price'); productChips(items,act); return; }
+  if(items.length<=3){ bot(`${cat} ke products `); items.forEach(showProduct); }
+  else { bot(`${cat} ke ${items.length} products hain `); productChips(items,act); }
+}
+
+/* ---------- state / forms ---------- */
+let mode=null, form=null, cur=null, editIdx=-1, curSize='', pendPre=null;
+function cancelFlow(silent){ mode=null; form=null; cur=null; editIdx=-1; curSize=''; pendPre=null; if(!silent){ bot('Theek hai, rok diya. '); showMenu(); } }
+function goMenu(){ cancelFlow(true); chat.innerHTML=''; cartEl=null; showMenu(); chat.scrollTop=0; }
+function showMenu(){
+  const L=[
+   ['Products aur photos dekhein',()=>productsMenu('browse')],
+   ['Price list dekhein',()=>productsMenu('price')],
+   ['Wholesale enquiry',()=>startWholesale('wholesale')],
+   ['Distributor banna hai',()=>startWholesale('distributor')],
+   ['Order dena hai',()=>productsMenu('order')],
+   ['Delivery aur payment',()=>{ answerTopic('delivery'); answerTopic('payment',true); }]
+  ].map(([label,fn])=>({label,fn}));
+  L.push(waChip(HELLO(),'Company se WhatsApp par baat karein'));
+  if(DATA.faqs.some(f=>f.a)) L.push({label:'Aur sawal-jawab',cls:'faq',fn:showFaqList});
+  chips(L,6);
+}
+function showFaqList(){ const l=DATA.faqs.filter(f=>f.a); if(!l.length){ bot('Abhi koi sawal-jawab set nahi hai.'); return; } bot('Aap ye sawal pooch sakte hain, ya apne shabdon me likhein '); chips(l.map(f=>({label:''+f.q,cls:'faq',fn:()=>bot(f.a)}))); }
+const topicFaq = t => { const f=DATA.faqs.find(x=>x.topic===t&&x.a); return f?f.a:''; };
+function answerTopic(topic,noWa){
+  const FB={
+   delivery:'Delivery ka samay aur charge shehar aur quantity par depend karta hai. Abhi mere paas confirmed jaankari nahi hai, isliye main koi din ya charge nahi bata sakta. Company aapko WhatsApp par confirm kar degi.',
+   payment:'Payment ke tareeke ki confirmed jaankari mere paas nahi hai. Company order ke baad WhatsApp par batayegi.',
+   track:'Is bot me order tracking nahi hai. Order ki sthiti ke liye company se WhatsApp par poochein.',
+   returns:'Return ya damaged product ki policy abhi mere paas confirmed nahi hai. Kripya company ko photo ke saath WhatsApp par batayein.'
+  };
+  const a=topicFaq(topic); let txt=a||FB[topic]||'';
+  if(topic==='delivery'&&DATA.delivery.confirmed&&DATA.delivery.amount!=null) txt+=`\n\nConfirmed delivery charge: ${money(DATA.delivery.amount)}${DATA.delivery.note?' ('+DATA.delivery.note+')':''}`;
+  if(txt) bot(txt);
+  if(!a&&!noWa) chips([waChip(`Namaste, mujhe ${topic} ke baare me jaankari chahiye.`)]);
+}
+function humanChat(){ bot('Company ki team se seedha WhatsApp par baat kar sakte hain '+(DATA.hours?`\n\nSamay: ${DATA.hours}`:'')+(DATA.address?`\n${DATA.address}`:'')); chips([waChip(HELLO())]); }
+function aboutCompany(){
+  const a=topicFaq('company')||DATA.about;
+  bot(a||`${DATA.brand}.\n\nHamare catalogue me abhi: ${catsWithProducts().map(c=>`${c} (${inCat(c).length})`).join(', ')||'koi product nahi'}.\n\nAur jaankari ke liye company se WhatsApp par baat kar sakte hain.`);
+  chips([{label:'Products dekhein',fn:()=>productsMenu('browse')},waChip(HELLO())]);
+}
+const boxKg = () => DATA.bulk.boxKg;
+function kgOf(qty,unit){ return unit==='kg'?qty:(unit==='box'||unit==='carton')?r2(qty*boxKg()):null; }
+function bulkCheck(qty,unit){
+  const kg=kgOf(qty,unit); if(kg===null) return '';
+  const b=DATA.bulk, eq=(unit==='kg'?'':` (${qty} box = ${kg} kg)`);
+  if(kg<b.minKg) return `Wholesale enquiry ke liye kam se kam ${b.minKg} kg chahiye (1 box = ${b.boxKg} kg). Aapki quantity ${kg} kg${eq} hai. Kripya badhakar likhiye.`;
+  if(kg>b.maxKg) return `Ek enquiry me zyada se zyada ${b.maxKg} kg (1 box = ${b.boxKg} kg) ki quantity li ja sakti hai. Aapki quantity ${kg} kg${eq} hai. Isse zyada ke liye company se seedha WhatsApp par baat karein, ya quantity kam karke likhiye.`;
+  return '';
+}
+const qtyDisp = (qty,unit) => (unit==='box'||unit==='carton')?`${qty} box (${kgOf(qty,unit)} kg)`:`${qty} ${unit}`;
+function bulkLine(){ const b=DATA.bulk, lo=Math.ceil(b.minKg/b.boxKg), hi=Math.floor(b.maxKg/b.boxKg); return `Wholesale / bulk quantity: kam se kam ${b.minKg} kg aur zyada se zyada ${b.maxKg} kg ek enquiry me. 1 box = ${b.boxKg} kg, yani ${lo} box (${r2(lo*b.boxKg)} kg) se ${hi} box (${r2(hi*b.boxKg)} kg) tak.`; }
+function minQtyInfo(){
+  const a=topicFaq('minqty'); bot(a||bulkLine());
+  const l=DATA.products.filter(p=>p.minq);
+  if(l.length) bot('Product ke hisaab se wholesale rate ke liye kam se kam quantity:\n'+l.map(p=>`• ${p.name}: ${p.minq} ${p.unit}${p.confirmed?'':' (confirm hona baaki)'}`).join('\n'));
+  chips([{label:'Wholesale enquiry bhejein',cls:'solid',fn:()=>startWholesale('wholesale')},waChip('Namaste, mujhe minimum order quantity ke baare me puchhna hai.')]);
+}
+function supplyInfo(n){
+  const STOP=new Set(['kya','aap','aapka','kab','kaise','kitne','din','mein','me','main','mai','ko','tak','supply','karte','karti','ho','hain','hai','delivery','deliver','milta','milega','bhi','kar','do','ka','ki','ke','se','area','nahi','haan','please']);
+  const toks=n.split(' ').filter(w=>w.length>=3&&!STOP.has(w));
+  const areas=String(DATA.areas||'').split(',').map(norm).filter(Boolean);
+  const city=toks.find(w=>areas.some(a=>a===w||a.includes(w)||w.includes(a)))||toks[0];
+  if(!city){ bot('Kis shehar ya area ke liye supply chahiye? City ka naam likhiye.'); return; }
+  const hit=areas.find(a=>a===city||a.includes(city)||city.includes(a));
+  if(hit) bot(`Haan, ${cap(hit)} hamare supply areas me hai. Quantity aur delivery ki confirmed jaankari company WhatsApp par degi.`);
+  else{ bot(`${cap(city)} ke liye supply ki confirmed jaankari mere paas nahi hai. Company se confirm kar lijiye.`); chips([waChip(`Namaste, kya aap ${cap(city)} me supply karte hain?`)]); }
+}
+function wholesalePriceInfo(){
+  const l=DATA.products.filter(p=>p.wprice!=null);
+  if(l.length){ bot('Wholesale rate (jo company ne set kiye hain):'); priceListCard(l,'Wholesale rates'); }
+  else bot('Wholesale rate abhi set nahi hain, isliye main koi rate nahi bata sakta. Quantity bataiye, company quotation WhatsApp par degi.');
+  chips([{label:'Wholesale enquiry bhejein',cls:'solid',fn:()=>startWholesale('wholesale')}]);
+}
+function unknown(t){
+  bot('Is sawal ka pakka jawab mere paas abhi nahi hai, aur galat jaankari dena theek nahi hoga. Company ki team aapko seedha WhatsApp par sahi jawab degi.');
+  chips([waChip('Namaste, mera sawal hai: '+t.slice(0,300),'Ye sawal company ko bhejein'),{label:'Menu',cls:'faq',fn:goMenu}]);
+}
+
+/* ---------- free text (rule based) ---------- */
+function parseQtyUnit(raw){
+  const m=String(raw).toLowerCase().match(/(\d+(?:\.\d+)?)\s*([a-z]+)?/); if(!m) return null;
+  const U={kg:['kg','kgs','kilo','kilos'],packet:['packet','packets','pkt','pkts','pack','packs'],piece:['piece','pieces','pc','pcs'],box:['box','boxes','carton','cartons','peti'],set:['set','sets','combo']};
+  let unit=null; if(m[2]) for(const u in U) if(U[u].includes(m[2])) unit=u;
+  return {qty:parseFloat(m[1]),unit};
+}
+function findProducts(n){
+  const toks=n.split(' ');
+  return DATA.products.filter(p=>{ const nm=norm(p.name); if(nm&&n.includes(nm)) return true; return (p.alias||[]).some(a=>{ a=norm(a); return a&&(a.includes(' ')?(' '+n+' ').includes(' '+a+' '):toks.some(t=>near(t,a))); }); });
+}
+const DAYS={sunday:'ravivar',monday:'somvar',tuesday:'mangalvar',wednesday:'budhvar',thursday:'guruvar',friday:'shukravar',saturday:'shanivar',ravi:'ravivar',som:'somvar',mangal:'mangalvar',budh:'budhvar',guru:'guruvar',shukra:'shukravar',shani:'shanivar'};
+const KSTOP=new Set('kaun kaunsi konsi konsa kaunsa kya kis kisi liye wali wala vali hai hain agarbatti agarbati incense puja pooja pujan jalana jalani chahiye batao bataiye dikhao mujhe hamare aapke aapki apke milti milta milega best accha acchi achha sabse jyada zyada koi aur bhi mein main mere meri hum aap hota hoti hote kar karna karni karein please bhai sir madam ji dev devi maa mata bhagwan khushbu khushboo sugandh smell fragrance scent packing packet price rate stock kimat daam wali walii'.split(' '));
+function knowledgeAnswer(n,prods){
+  const T=w=>has(n,w);
+  if(prods.length){
+    const p=prods[0]; let txt='';
+    if(T(['khushbu','khushboo','sugandh','smell','fragrance','mahak','scent'])) txt=p.smell?`${p.name} ki khushbu: ${p.smell}.`:`${p.name} ki khushbu ki jaankari abhi catalogue me nahi hai.`;
+    else if(T(['inch','inches','lambai','lambi'])) txt=szs(p).length?`${p.name} ye inch me milti hai: ${szs(p).map(z=>z.inch+' inch'+(z.price!=null?' ('+money(z.price)+'/'+p.unit+')':'')).join(', ')}.`:`${p.name} ke inch / size ki jaankari abhi catalogue me nahi hai.`;
+    else if(T(['packing','sticks','stick','kitni agarbatti','kitne sticks','packet me','pack me','size','kitni batti'])) txt=p.pack?`${p.name} ki packing: ${p.pack}.`:`${p.name} ki packing ki jaankari abhi catalogue me nahi hai.`;
+    else if(T(['kis din','kab jalayen','kab jalaye','kab jalani','kiske liye','kis liye','upyog','use','istemal','fayda','labh','vaar','kis puja','kaun se din'])) txt=p.desc?`${p.name}: ${p.desc}.`:`${p.name} ke upyog ki jaankari abhi catalogue me nahi hai.`;
+    else if(T(['stock','available','availability','milegi','milega'])) txt=p.stock==='available'?`${p.name} company ke record ke anusar available hai. Quantity ke hisaab se final confirmation company degi.`:p.stock==='out'?`${p.name} company ke record ke anusar abhi stock me nahi hai.`:`${p.name} ke stock ki confirmed jaankari mere paas nahi hai. Company se confirm kar lijiye.`;
+    if(txt){ bot(txt); chips([{label:'Poori detail dekhein',fn:()=>showProduct(p)},{label:'Cart me jodein',cls:'solid',fn:()=>startQty(p)}]); return true; }
+    return false;
+  }
+  const toks=n.split(' ').map(t=>DAYS[t]||t).filter(t=>t.length>=4&&!KSTOP.has(t));
+  if(!toks.length) return false;
+  const scored=DATA.products.map(p=>{ const hay=norm([p.name,p.desc,p.smell].join(' ')).split(' '); let sc=0; toks.forEach(t=>{ if(hay.some(w=>near(t,w)||(t.length>=5&&w.startsWith(t)))) sc++; }); return {p,sc}; }).filter(x=>x.sc>0).sort((a,b)=>b.sc-a.sc);
+  if(!scored.length) return false;
+  const top=scored.filter(x=>x.sc===scored[0].sc).slice(0,4); if(top.length>4) return false;
+  if(top.length===1){ bot('Aapke sawal ke liye ye agarbatti sahi rahegi:'); showProduct(top[0].p); return true; }
+  bot('Aapke sawal ke hisaab se ye products milte hain:\n\n'+top.map(x=>`• ${x.p.name}${x.p.desc?' — '+x.p.desc:''}`).join('\n'));
+  productChips(top.map(x=>x.p),showProduct); return true;
+}
+function findCategory(n){ return DATA.categories.find(c=>n.includes(norm(c)))||(has(n,['dhoop cone','cone'])?'Dhoop cone':has(n,['kandi'])?'Dhoop kandi':has(n,['gili dhoop','geeli dhoop'])?'Gili dhoop':has(n,['sambrani'])?'Sambrani cup':has(n,['loban'])?'Loban agarbatti':null); }
+function findFaq(n){ let best=null,sc=0; DATA.faqs.forEach(f=>{ if(!f.a) return; let s=0; (f.k||[]).forEach(k=>{ k=norm(k); if(k&&(' '+n+' ').includes(' '+k+' ')) s+=k.length; }); if(f.q&&n.includes(norm(f.q))) s+=100; if(s>sc){ sc=s; best=f; } }); return sc>=4?best:null; }
+function looksQuestion(t){ const n=norm(t); return /\?/.test(t)||/^(kya|kitn[aei]?|kaise|kab|kahan|kyu|kaun|konsa|what|how|when|where|why|can|do|is|aap|tell|batao|bataiye)\b/.test(n); }
+function freeChat(t,inMode){
+  const im=String(t).toLowerCase().match(/(\d+(?:\.\d+)?)\s*(?:inch(?:es)?|["”″])/), szTxt=im?im[1]:'';
+  const n=norm(t), prods=findProducts(n), cat=findCategory(n), bq=parseQtyUnit(im?String(t).replace(im[0],' '):t);
+  const T=w=>has(n,w);
+  const block=()=>{ bot('Pehle abhi ka step pura kar lete hain. Rokna ho to "cancel" likhiye.'); return true; };
+  if(T(['address','location','kahan par','shop kahan','dukan kahan','office kahan','pata kya'])){ if(DATA.address) bot('Hamara pata:\n'+DATA.address+(DATA.hours?'\n\nSamay: '+DATA.hours:'')); else{ bot('Company ka address abhi is bot me set nahi hai. Seedha WhatsApp par puchh lijiye.'); } chips([waChip(HELLO())]); return true; }
+  if(T(['owner','malik','baat karni','baat karna','baat karo','call','phone number','contact','sampark','whatsapp','human','manager','customer care','company se baat'])){ humanChat(); return true; }
+  if(T(['cart','meri list','order dikhao'])){ showCart(); return true; }
+  const whole=T(['wholesale','thok','bulk','quotation','quote','होलसेल','थोक']), dist=T(['distributor','distribution','stockist','agency','franchise','dealer']);
+  const priceQ=T(['price','rate','kimat','keemat','daam','bhav','kitne ka','kitna','cost','mrp','कीमत','दाम','रेट']);
+  if((whole||dist)&&priceQ&&!inMode){ wholesalePriceInfo(); return true; }
+  if(whole||dist||(bq&&bq.unit==='kg'&&prods.length===0)){
+    if(inMode) return block();
+    startWholesale(dist?'distributor':'wholesale',{product:prods[0],qty:bq&&bq.qty,unit:bq&&bq.unit}); return true;
+  }
+  if(T(['minimum','moq','min order','kam se kam'])){ minQtyInfo(); return true; }
+  if(T(['order','kharid','khareed','buy','purchase','lena hai','chahiye','book','mangwa','ऑर्डर','खरीद'])||(bq&&prods.length)){
+    if(inMode) return block();
+    if(prods.length){ const p=prods[0]; if(bq){ const u=bq.unit||p.unit, q=validQty(bq.qty,u); if(q===null){ bot('Quantity sahi nahi lagi. Poori sankhya likhiye (kg me decimal chalega).'); return true; } startQty(p,{qty:q,unit:u,size:szTxt}); } else { showProduct(p); startQty(p,szTxt?{size:szTxt}:undefined); } }
+    else productsMenu('order');
+    return true;
+  }
+  if(priceQ){ if(prods.length) showProduct(prods[0]); else if(cat) listCategory(cat,'price'); else productsMenu('price'); return true; }
+  if(knowledgeAnswer(n,prods)) return true;
+  if(prods.length){ showProduct(prods[0]); return true; }
+  if(cat){ listCategory(cat,'browse'); return true; }
+  if(T(['product','products','photo','photos','pic','image','dikhao','catalogue','catalog','list','kya kya','variety','tasveer','packing'])){ productsMenu('browse'); return true; }
+  if(/\b(karte|karti|karta)\b/.test(n)&&T(['delivery','supply','milta','milega'])){ supplyInfo(n); return true; }
+  const faq=findFaq(n); if(faq){ bot(faq.a); if(faq.topic==='delivery'&&DATA.delivery.confirmed&&DATA.delivery.amount!=null) bot(`Confirmed delivery charge: ${money(DATA.delivery.amount)}${DATA.delivery.note?' ('+DATA.delivery.note+')':''}`); return true; }
+  if(T(['delivery','shipping','courier','kitne din','kab tak','dispatch','डिलीवरी'])){ answerTopic('delivery'); return true; }
+  if(T(['payment','paise','upi','cod','gpay','phonepe','paytm','advance','pay','पेमेंट'])){ answerTopic('payment'); return true; }
+  if(T(['track','tracking','order status','mera parcel'])){ answerTopic('track'); return true; }
+  if(T(['return','refund','damage','damaged','kharab','exchange','complaint','shikayat'])){ answerTopic('returns'); return true; }
+  if(T(['timing','hours','kab khule','business hours'])){ if(DATA.hours) bot('Business hours: '+DATA.hours); else{ bot('Business hours abhi set nahi hain.'); chips([waChip('Namaste, aapka business time kya hai?')]); } return true; }
+  if(T(['supply','milta','milega','karte ho'])){ supplyInfo(n); return true; }
+  if(T(['company','about','aapke bare','kya banati','kaun ho','manufacturer','udyog','kya karte'])){ aboutCompany(); return true; }
+  if(T(['thanks','thank','shukriya','dhanyavaad','धन्यवाद'])){ bot('Aapka swagat hai! Aur kuch madad chahiye to bataiye.'); chips([{label:'Menu',fn:goMenu}]); return true; }
+  if(T(['hello','hi','hii','hey','namaste','namaskar','pranam','ram ram','radhe radhe','नमस्ते'])&&n.split(' ').length<=4){ if(!inMode){ bot('Namaste! Main aapki kaise madad kar sakta hoon?'); showMenu(); } return !inMode; }
+  if(inMode) return false;
+  if(knowledgeAnswer(n,[])) return true;
+  unknown(t); return true;
+}
+
+/* ---------- quantity flow ---------- */
+function startQty(p,pre){
+  if(mode) cancelFlow(true);
+  if(p.stock==='out'){ bot(`Maaf kijiye, ${p.name} abhi stock me nahi hai (company ke record ke anusar).`); chips([waChip(`Namaste, ${p.name} kab tak available hoga?`)]); return; }
+  cur=p; curSize=''; pendPre=null;
+  const sz=szs(p);
+  if(sz.length){
+    const want=pre&&pre.size?findSize(p,pre.size):null;
+    if(want) curSize=want.inch;
+    else if(sz.length===1) curSize=sz[0].inch;
+    else{ pendPre=pre&&pre.qty?pre:null; mode='size'; askSize(); return; }
+  }
+  if(pre&&pre.qty){ commitQty(p,pre.qty,pre.unit,curSize); return; }
+  mode='qty'; askQty();
+}
+function findSize(p,t){ const n=normInch(t); if(!n) return null; return szs(p).find(z=>z.inch===n||(isFinite(+n)&&+z.inch===+n))||null; }
+function askSize(){
+  const p=cur;
+  bot(`${p.name} ye ${szs(p).length} alag-alag inch me milti hai. Kaun si inch chahiye?`);
+  chips(szs(p).map(z=>({label:`${z.inch} inch`+(z.price!=null?` — ${money(z.price)}/${p.unit}`:''),fn:()=>sizeInput(z.inch,true)})).concat([{label:'Cancel',cls:'faq',fn:()=>cancelFlow()}]));
+}
+function sizeInput(t,chip){
+  const p=cur; if(!p){ mode=null; return; }
+  const z=findSize(p,t);
+  if(!z){ if(!chip&&looksQuestion(t)&&freeChat(t,true)) return askSize(); bot('Ye inch available nahi hai. Neeche diye gaye inch me se chuniye.'); return askSize(); }
+  curSize=z.inch; const pre=pendPre; pendPre=null;
+  if(pre&&pre.qty){ commitQty(p,pre.qty,pre.unit,curSize); return; }
+  mode='qty'; askQty();
+}
+function qtyOptions(p){ if((p.qopts||[]).length) return p.qopts; const m=p.omin; return m?[m,m*2,m*3,m*5,m*10].map(r2):[1,2,5,10,20]; }
+function askQty(){
+  const p=cur;
+  bot(`${p.name}${curSize?` (${curSize} inch)`:''} ki kitni quantity chahiye? ${p.omin?`Kam se kam ${p.omin} ${p.unit} lena hoga. `:''}Number likhiye (jaise ${qtyOptions(p)[0]}). Rate ${p.unit} ke hisaab se hai${p.unit==='kg'?' (decimal chalega, jaise 2.5)':''}.`);
+  chips(qtyOptions(p).map(n=>({label:`${n} ${p.unit}`,fn:()=>qtyInput(String(n),true)})).concat([{label:'Cancel',cls:'faq',fn:()=>cancelFlow()}]));
+}
+function qtyInput(t,chip){
+  const r=parseQtyUnit(t);
+  if(!r&&!chip&&looksQuestion(t)&&freeChat(t,true)) return askQty();
+  if(!r){ bot('Kripya quantity number me likhiye (jaise 5).'); return; }
+  const unit=r.unit||cur.unit, q=validQty(r.qty,unit);
+  if(q===null){ bot(unit==='kg'?'Quantity 0 se zyada aur 100000 tak honi chahiye.':`${unit} ki quantity poori sankhya me honi chahiye (jaise 5).`); return; }
+  commitQty(cur,q,unit,curSize);
+}
+function commitQty(p,q,unit,size){
+  size=size||''; if(p.omin&&unit===p.unit&&q<p.omin){ bot(`${pn(p,size)} ka kam se kam order ${p.omin} ${p.unit} hai. Aapne ${q} ${unit} likha. Kripya ${p.omin} ya usse zyada chuniye.`); cur=p; curSize=size; mode='qty'; askQty(); return; }
+  const ex=cart.find(i=>i.pid===p.id&&i.unit===unit&&(i.size||'')===size); let merged=false,total=q;
+  if(ex){ ex.qty=r2(ex.qty+q); merged=true; total=ex.qty; } else cart.push({pid:p.id,qty:q,unit,size});
+  saveCart(); mode=null; cur=null; curSize=''; pendPre=null;
+  const note=unit!==p.unit?`\n⚠ ${p.name} ka rate ${p.unit} ke hisaab se hai, isliye ${unit} ka rate company confirm karegi.`:'';
+  const nm=pn(p,size);
+  bot(merged?`${nm} pehle se cart me tha, quantity jodi. Ab total: ${total} ${unit}.${note}`:`${nm} — ${q} ${unit} cart me add ho gaya.${note}`);
+  showCart();
+}
+
+/* ---------- cart card ---------- */
+let cartEl=null;
+function cartInner(){
+  const c=calc();
+  const rows=c.lines.map((x,i)=>`<div class="row"><div class="nm">${esc(pn(x.p,x.l.size))}<small>${x.r.ok?`${money(x.r.rate)} × ${x.l.qty} ${esc(x.l.unit)} = <b>${money(x.r.amount)}</b>${x.r.kind==='wholesale'?' (wholesale rate)':''}`:esc(x.r.reason)}</small></div><button data-c="dec" data-i="${i}" aria-label="Kam karein">−</button><b>${x.l.qty}</b><button data-c="inc" data-i="${i}" aria-label="Badhayein">+</button><button data-c="edit" data-i="${i}" aria-label="Badlein">✎</button><button data-c="del" data-i="${i}" aria-label="Hatayein" style="border-color:#c0392b;color:#c0392b">✕</button></div>`).join('');
+  return `<div class="body"><h3>Aapka cart</h3>${rows}<div class="total">${totalsHtml(c)}</div><div class="note">Ye abhi sirf cart hai. Order tabhi confirm maana jayega jab company WhatsApp par confirm kare.</div></div>`;
+}
+function showCart(){
+  if(cartEl&&cartEl.parentNode) cartEl.remove();
+  if(!cart.length){ cartEl=null; bot('Aapka cart abhi khali hai.'); chips([{label:'Products dekhein',fn:()=>productsMenu('order')}]); return; }
+  const el=card(cartInner()); cartEl=el;
+  el.addEventListener('click',e=>{
+    const b=e.target.closest('[data-c]'); if(!b) return; const i=+b.dataset.i, l=cart[i]; if(!l) return;
+    if(b.dataset.c==='inc'){ l.qty=Math.min(100000,r2(l.qty+1)); }
+    else if(b.dataset.c==='dec'){ const nq=r2(l.qty-1); const pp=getP(l.pid), mn=(pp&&pp.omin&&l.unit===pp.unit)?pp.omin:0; if(nq<=0||nq<mn){ toast(mn?`Kam se kam ${mn} ${l.unit} rakhein, hatane ke liye ✕ dabayein`:'Kam se kam 1 rakhein, hatane ke liye ✕ dabayein'); return; } l.qty=nq; }
+    else if(b.dataset.c==='del'){ cart.splice(i,1); }
+    else if(b.dataset.c==='edit'){ mode='editqty'; editIdx=i; bot(`${pn(getP(l.pid),l.size)} ki nayi quantity likhiye (abhi: ${l.qty} ${l.unit}).`); return; }
+    saveCart(); if(!cart.length){ el.remove(); cartEl=null; bot('Cart khali ho gaya.'); } else el.innerHTML=cartInner();
+  });
+  chips([{label:'Aur product jodein',fn:()=>productsMenu('order')},{label:'Order bhejne ki taiyari',cls:'solid',fn:startCheckout},{label:'Cart khali karein',cls:'faq',fn:()=>{ cart=[]; saveCart(); bot('Cart khali kar diya.'); showMenu(); }}]);
+}
+function editInput(t){
+  const l=cart[editIdx]; if(!l){ mode=null; return; }
+  const r=parseQtyUnit(t);
+  if(!r){ if(looksQuestion(t)&&freeChat(t,true)) return bot('Naya quantity number me likhiye (jaise 5).'); bot('Kripya quantity number me likhiye (jaise 5).'); return; }
+  const q=validQty(r.qty,l.unit); if(q===null){ bot('Quantity sahi nahi hai. Poori sankhya (kg me decimal bhi chalega), 100000 tak.'); return; }
+  const pp=getP(l.pid); if(pp&&pp.omin&&l.unit===pp.unit&&q<pp.omin){ bot(`Kam se kam ${pp.omin} ${l.unit} lena hoga. Kripya ${pp.omin} ya usse zyada likhiye.`); return; }
+  l.qty=q; mode=null; editIdx=-1; saveCart(); bot('Quantity badal di.'); showCart();
+}
+
+/* ---------- generic form ---------- */
+function runForm(f){ form=f; mode='form'; formNext(); }
+function formNext(){
+  while(form.i<form.steps.length&&form.steps[form.i].has&&form.steps[form.i].has(form.data)) form.i++;
+  if(form.i>=form.steps.length){ const f=form; form=null; mode=null; f.done(f.data); return; }
+  askStep();
+}
+function askStep(err){
+  const s=form.steps[form.i];
+  bot((err?err+'\n\n':'')+(typeof s.q==='function'?s.q():s.q));
+  const list=(s.chips?s.chips():[]).map(c=>({label:c,fn:()=>formInput(c,true)}));
+  if(s.optional) list.push({label:'Skip',cls:'faq',fn:()=>formInput('',true,true)});
+  list.push({label:'Cancel',cls:'faq',fn:()=>cancelFlow()});
+  chips(list);
+}
+const SKIP=/^(skip|chhodein|chodein|nahi|nhi|no|none|-)$/;
+function formInput(t,chip,skip){
+  const s=form.steps[form.i];
+  if(!skip&&s.optional&&SKIP.test(norm(t))) skip=true;
+  if(skip){ if(!s.optional) return askStep('Ye jaankari zaroori hai.'); form.data[s.key]=''; form.i++; return formNext(); }
+  if(!chip&&looksQuestion(t)&&freeChat(t,true)) return askStep();
+  const v=s.parse(t,form.data);
+  if(v===undefined){ const e=form.data._err; delete form.data._err; if(form.data._back){ delete form.data._back; const qi=form.steps.findIndex(x=>x.key==='qty'); if(qi>=0) form.i=qi; } return askStep(e||s.err); }
+  form.data[s.key]=v; form.i++; formNext();
+}
+const cleanPhone = t => { const d=String(t).replace(/\D/g,'').replace(/^(91|0)(?=\d{10}$)/,''); return /^[6-9]\d{9}$/.test(d)?d:null; };
+const S_NAME={key:'name',q:'Aapka naam bataiye?',has:d=>!!d.name,parse:t=>{ t=t.trim(); return (t.length>=2&&t.length<=60&&!/\d{5,}/.test(t))?cap(t):undefined; },err:'Kripya apna sahi naam likhiye '};
+const S_PHONE={key:'phone',q:'Follow-up ke liye 10 digit ka mobile number likhiye (zaroori nahi, Skip kar sakte hain).',optional:true,has:d=>d.phone!==null&&d.phone!==undefined,parse:t=>cleanPhone(t)||undefined,err:'Number sahi nahi lag raha. 10 digit ka number likhiye ya Skip dabaiye.'};
+const S_CITY={key:'city',q:'Aap kis shehar (city) se hain?',has:d=>!!d.city,parse:t=>{ t=t.trim(); return (t.length>=2&&t.length<=40&&!/\d/.test(t))?cap(t):undefined; },err:'Kripya shehar ka naam likhiye (jaise Nagpur).'};
+const S_STATE={key:'state',q:'Aur state? Chuniye ya likhiye ',optional:true,has:d=>d.state!==null&&d.state!==undefined,chips:()=>STATES,parse:t=>{ t=t.trim(); return (t.length>=3&&t.length<=40&&!/\d/.test(t))?cap(t):undefined; },err:'Kripya state ka naam likhiye ya Skip dabaiye.'};
+
+/* ---------- order ---------- */
+function startCheckout(){
+  if(!cart.length){ showCart(); return; }
+  const blocked=cart.filter(l=>{ const p=getP(l.pid); return p&&p.stock==='out'; });
+  if(blocked.length){ bot('Ye item abhi stock me nahi hai: '+blocked.map(l=>getP(l.pid).name).join(', ')+'.\nKripya cart se hata dein ya company se puchhein.'); showCart(); return; }
+  bot('Order request taiyar karne ke liye kuch details chahiye. Beech me koi bhi sawal pooch sakte hain.');
+  runForm({steps:[S_NAME,S_PHONE,S_CITY,S_STATE],data:{name:customer.name,phone:customer.phone,city:customer.city,state:customer.state},i:0,done:d=>{ Object.assign(customer,d); orderSummary(); }});
+}
+const loc = d => [d.city,d.state].filter(Boolean).join(', ')||'diya nahi gaya';
+function orderText(){
+  const c=calc();
+  return `*ORDER REQUEST - ${DATA.brand}*\n(Ye abhi sirf request hai, order company ke confirm karne par hi confirmed hoga)\n\n*Naam:* ${customer.name}\n*Mobile:* ${customer.phone||'diya nahi gaya'}\n*Shehar/State:* ${loc(customer)}\n\n*Items:*\n${c.lines.map(lineText).join('\n')}\n\n${totalsText(c).join('\n')}\n\nKripya price, stock aur delivery confirm karein. `;
+}
+function copyText(t){
+  const done=()=>bot('Copy ho gaya Ab WhatsApp me paste karke bhej dein.');
+  const fb=()=>{ try{ const ta=document.createElement('textarea'); ta.value=t; ta.style.cssText='position:fixed;opacity:0'; document.body.appendChild(ta); ta.select(); const ok=document.execCommand('copy'); ta.remove(); if(ok) return done(); }catch(e){} bot('Copy nahi ho paya. Ye text select karke copy karein:\n\n'+t); };
+  if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(done,fb); else fb();
+}
+function orderSummary(){
+  const c=calc();
+  card(`<div class="body"><h3>Order request ka summary</h3><small>Status: <b>Company ke confirm karne ka intezaar (abhi bheja nahi gaya)</b></small><br>${esc(customer.name)}<br>${esc(customer.phone||'mobile diya nahi gaya')}<br>${esc(loc(customer))}${c.lines.map(x=>`<div class="row"><div class="nm">${esc(pn(x.p,x.l.size))}<small>${x.l.qty} ${esc(x.l.unit)} — ${x.r.ok?money(x.r.amount):esc(x.r.reason)}</small></div></div>`).join('')}<div class="total">${totalsHtml(c)}</div><div class="note">WhatsApp par bhejna = order request. Order tab confirmed hoga jab company reply kare.</div></div>`);
+  bot('Sab theek lage to neeche WhatsApp button se bhejiye ');
+  chips([
+    waChip(orderText(),'WhatsApp pe Order Request Bhejein',()=>bot('WhatsApp khul gaya hoga. Wahan "Send" dabana na bhoolein. ')),
+    {label:'Order Copy Karein',keep:true,fn:()=>copyText(orderText())},
+    {label:'Cart badlein',keep:true,fn:()=>{ user('Cart badlein'); showCart(); }},
+    {label:'Details badlein',keep:true,fn:()=>{ user('Details badlein'); customer={name:'',phone:null,city:'',state:null}; startCheckout(); }},
+    {label:'Naya enquiry',keep:true,fn:()=>{ user('Naya enquiry'); cart=[]; saveCart(); showMenu(); }}
+  ]);
+}
+
+/* ---------- wholesale / distributor ---------- */
+function startWholesale(kind,pre){
+  pre=pre||{};
+  if(mode) cancelFlow(true);
+  bot((kind==='distributor'?'Distributor enquiry':'Wholesale enquiry')+' ke liye kuch sawal. Rate aur shartein company hi confirm karegi. Beech me koi bhi sawal pooch sakte hain.\n\n'+bulkLine());
+  const d={name:customer.name,business:undefined,buyer:kind==='distributor'?'Distributor':'',product:pre.product?pre.product.name:'',qty:null,unit:'',location:loc(customer)==='diya nahi gaya'?'':loc(customer),phone:customer.phone,kind};
+  if(pre.qty&&validQty(pre.qty,pre.unit||'packet')!==null&&!(pre.unit&&bulkCheck(pre.qty,pre.unit))){ d.qty=pre.qty; if(pre.unit) d.unit=pre.unit; }
+  const steps=[
+   S_NAME,
+   {key:'business',q:'Aapki dukaan / business ka naam? (agar hai)',optional:true,has:x=>x.business!==undefined,parse:t=>{ t=t.trim(); return t.length>=2&&t.length<=80?t:undefined; },err:'Business ka naam likhiye ya Skip dabaiye.'},
+   {key:'buyer',q:'Aap kis roop me enquiry kar rahe hain?',has:x=>!!x.buyer,chips:()=>['Retailer','Wholesaler','Distributor','Other'],parse:t=>{ const n=norm(t); if(/retail|dukan|shop/.test(n)) return 'Retailer'; if(/whole|thok/.test(n)) return 'Wholesaler'; if(/distrib|agency|stockist/.test(n)) return 'Distributor'; if(/other|anya/.test(n)) return 'Other'; return n.length>=2?'Other: '+t.trim().slice(0,40):undefined; },err:'Retailer, Wholesaler, Distributor ya Other chuniye.'},
+   {key:'product',q:'Kaun sa product chahiye? Naam likhiye ya category chuniye (ya "Sabhi / kai products").',has:x=>!!x.product,chips:()=>catsWithProducts().concat(['Sabhi / kai products']),parse:t=>{ t=t.trim(); if(t.length<2||t.length>150) return undefined; const f=findProducts(norm(t)); return f.length?f[0].name:t; },err:'Kripya product ka naam likhiye.'},
+   {key:'qty',q:()=>`Kitni quantity chahiye? Unit ke saath likhiye (jaise ${DATA.bulk.minKg*2} kg ya 4 box). Kam se kam ${DATA.bulk.minKg} kg, zyada se zyada ${DATA.bulk.maxKg} kg; 1 box = ${DATA.bulk.boxKg} kg.`,has:x=>x.qty!==null&&x.qty!==undefined,parse:(t,x)=>{ const r=parseQtyUnit(t); if(!r) return undefined; if(validQty(r.qty,r.unit||'kg')===null) return undefined; if(r.unit){ const e=bulkCheck(r.qty,r.unit); if(e){ x._err=e; return undefined; } x.unit=r.unit; } return r.qty; },err:'Quantity samajh nahi aayi. Aise likhiye: 100 kg ya 4 box.'},
+   {key:'unit',q:'Ye quantity kis unit me hai?',has:x=>!!x.unit,chips:()=>['kg','box','packet','piece'],parse:(t,x)=>{ const w=norm(t); let u=UNITS.find(k=>k===w)||(w==='boxes'||w==='peti'?'box':null); if(u==='carton') u='box'; if(!u) return undefined; if(u!=='kg'&&!Number.isInteger(x.qty)) return undefined; const e=bulkCheck(x.qty,u); if(e){ x._err=e; x.qty=null; x._back=1; return undefined; } return u; },err:'kg, box, packet ya piece chuniye (kg ke alawa poori sankhya hi chalegi).'},
+   {key:'location',q:'Aap kis city aur state se hain? (jaise Nagpur, Maharashtra)',has:x=>!!x.location,parse:t=>{ t=t.trim(); return (t.length>=3&&t.length<=80&&!/\d{4,}/.test(t))?cap(t):undefined; },err:'Kripya city aur state likhiye.'},
+   S_PHONE
+  ];
+  runForm({steps,data:d,i:0,done:wholesaleSummary});
+}
+function wholesaleText(d){
+  return `*${d.kind==='distributor'?'DISTRIBUTOR ENQUIRY':'WHOLESALE ENQUIRY'} - ${DATA.brand}*\n(Ye sirf enquiry hai, order confirm nahi hai)\n\nNaam: ${d.name}\nBusiness: ${d.business||'-'}\nBuyer type: ${d.buyer}\nProduct: ${d.product}\n⚖ Quantity: ${qtyDisp(d.qty,d.unit)}\nShehar/State: ${d.location}\nMobile: ${d.phone||'diya nahi gaya'}\n\nKripya rate, minimum quantity, delivery aur shartein bataiye. `;
+}
+function wholesaleSummary(d){
+  Object.assign(customer,{name:d.name,phone:d.phone});
+  card(`<div class="body"><h3>${d.kind==='distributor'?'Distributor':'Wholesale'} enquiry</h3><small>Status: <b>Enquiry taiyar (abhi bheji nahi gayi)</b></small><br>${esc(d.name)}<br>${esc(d.business||'-')}<br>${esc(d.buyer)}<br>${esc(d.product)}<br>⚖ ${esc(qtyDisp(d.qty,d.unit))}<br>${esc(d.location)}<br>${esc(d.phone||'diya nahi gaya')}<div class="note">Rate, minimum quantity, transport aur credit ki shartein company hi confirm karegi. Is enquiry me koi rate ya vaada shamil nahi hai.</div></div>`);
+  bot('Neeche button se enquiry company ko WhatsApp par bhejiye ');
+  chips([
+    waChip(wholesaleText(d),'WhatsApp pe Enquiry Bhejein',()=>bot('WhatsApp khul gaya hoga, wahan "Send" dabaiye. ')),
+    {label:'Enquiry Copy Karein',keep:true,fn:()=>copyText(wholesaleText(d))},
+    {label:'Badlav karein',keep:true,fn:()=>{ user('Badlav karein'); startWholesale(d.kind); }},
+    {label:'Naya enquiry',keep:true,fn:()=>{ user('Naya enquiry'); showMenu(); }}
+  ]);
+}
+
+/* ---------- optional AI (server-side proxy only) ---------- */
+let hist=[], aiDead=false;
+const aiOn = () => DATA.aiEnabled&&DATA.aiEndpoint&&!aiDead;
+function setNote(){ $('modeNote').textContent=aiOn()?'Order Assistant • AI mode':'Order Assistant • Basic mode'; }
+function publicCatalog(){
+  return {brand:DATA.brand,about:DATA.about,hours:DATA.hours,address:DATA.address,serviceAreas:DATA.areas,delivery:DATA.delivery.confirmed?DATA.delivery:{confirmed:false},
+    products:DATA.products.map(p=>({id:p.id,name:p.name,category:p.category,desc:p.desc,smell:p.smell,pack:p.pack,unit:p.unit,confirmed:p.confirmed,price:p.confirmed?p.price:null,wprice:p.confirmed?p.wprice:null,minq:p.minq,omin:p.omin,stock:p.stock,sizes:szs(p).map(z=>({inch:z.inch,price:p.confirmed?z.price:null,wprice:p.confirmed?z.wprice:null,minq:z.minq}))})),
+    faqs:DATA.faqs.filter(f=>f.a).map(f=>({q:f.q,a:f.a}))};
+}
+async function aiChat(text){
+  const ctrl=new AbortController(), to=setTimeout(()=>ctrl.abort(),20000);
+  try{
+    const clean=s=>String(s).replace(/\d{8,}/g,'[number]').slice(0,500);
+    const r=await fetch(DATA.aiEndpoint,{method:'POST',headers:{'Content-Type':'application/json'},signal:ctrl.signal,body:JSON.stringify({message:clean(text),history:hist.slice(-6).map(h=>({role:h.role,text:clean(h.text)})),catalog:publicCatalog()})});
+    if(!r.ok) throw new Error('status '+r.status);
+    const j=await r.json(); if(!j||typeof j.reply!=='string'||!j.reply.trim()) throw new Error('bad reply');
+    bot(j.reply.slice(0,1500)); hist.push({role:'user',text},{role:'assistant',text:j.reply}); hist=hist.slice(-12);
+    (Array.isArray(j.product_ids)?j.product_ids:[]).map(Number).filter((x,i,a)=>getP(x)&&a.indexOf(x)===i).slice(0,3).forEach(id=>showProduct(getP(id)));
+    const L=[];
+    if(j.action==='order') L.push({label:'Order dena hai',cls:'solid',fn:()=>productsMenu('order')});
+    if(j.action==='wholesale') L.push({label:'Wholesale enquiry',cls:'solid',fn:()=>startWholesale('wholesale')});
+    if(j.action==='distributor') L.push({label:'Distributor enquiry',cls:'solid',fn:()=>startWholesale('distributor')});
+    if(j.action==='human') L.push(waChip(HELLO()));
+    if(j.action==='cart') L.push({label:'Cart dekhein',cls:'solid',fn:showCart});
+    if(j.action==='products') L.push({label:'Products dekhein',cls:'solid',fn:()=>productsMenu('browse')});
+    if(L.length) chips(L);
+  }catch(e){
+    aiDead=true; setNote();
+    bot('AI abhi connect nahi ho pa rahi, isliye basic mode me jawab de raha hoon.');
+    freeChat(text,false);
+  }finally{ clearTimeout(to); }
+}
+
+/* ---------- input ---------- */
+function handle(text){
+  text=text.trim().slice(0,500); if(!text) return;
+  user(text);
+  const n=norm(text);
+  if(/^(menu|start|shuru|home|main menu)$/.test(n)){ goMenu(); return; }
+  if(/^(cancel|rehne do|rehne de|stop|band karo|ruko)$/.test(n)){ if(mode) cancelFlow(); else{ bot('Theek hai '); showMenu(); } return; }
+  if(mode==='form') return formInput(text);
+  if(mode==='size') return sizeInput(text);
+  if(mode==='qty') return qtyInput(text);
+  if(mode==='editqty') return editInput(text);
+  if(aiOn()) return aiChat(text);
+  freeChat(text,false);
+}
+function sendNow(){ const v=inp.value; if(!v.trim()) return; inp.value=''; try{ handle(v); }catch(err){ console.error(err); bot('Kuch gadbad ho gayi. "menu" likh kar dobara shuru karein.'); } }
+$('bar').addEventListener('submit',e=>{ e.preventDefault(); sendNow(); });
+$('sendBtn').addEventListener('click',e=>{ e.preventDefault(); sendNow(); });
+inp.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); sendNow(); } });
+if(window.visualViewport){ const f=()=>{ document.documentElement.style.setProperty('--vh',window.visualViewport.height+'px'); window.scrollTo(0,0); down(); }; window.visualViewport.addEventListener('resize',f); f(); }
+inp.addEventListener('focus',()=>setTimeout(down,300));
+document.querySelector('.quick').addEventListener('click',e=>{
+  const b=e.target.closest('[data-q]'); if(!b) return; const q=b.dataset.q;
+  if(q==='wa'){ const h=waLink(HELLO()); if(h) window.open(h,'_blank','noopener'); else toast('WhatsApp number set nahi hai'); return; }
+  if(mode) cancelFlow(true); clearChips();
+  if(q==='menu') goMenu(); else if(q==='products') productsMenu('browse'); else showCart();
+});
+function renderGrahas(){
+  const box=$('grahas'); if(box.dataset.done) return; box.dataset.done='1';
+  Object.keys(GC).forEach((k,i)=>{
+    const b=document.createElement('button'); b.type='button'; b.className='gdot'; b.setAttribute('aria-label',cap(k)+' agarbatti dekhein');
+    b.innerHTML='<i style="--c:'+GC[k]+';--d:'+(i*110+200)+'ms"></i>';
+    b.onclick=()=>{ const p=DATA.products.find(x=>norm(x.name).includes(k)); if(!p){ toast(cap(k)+' abhi catalogue me nahi hai'); return; } if(mode) cancelFlow(true); clearChips(); user(p.name); showProduct(p); };
+    box.appendChild(b);
+  });
+}
+function renderHeader(){
+  { const w=String(DATA.brand||'').trim().split(/\s+/); $('brandH').textContent=w[0]||''; $('brandSub').textContent=w.slice(1).join(' '); renderGrahas(); }
+  const img=$('logoImg'); img.onerror=()=>{ img.onerror=null; img.src=defaultLogo(); }; img.src=DATA.logo||'logo.png';
+  document.title=DATA.brand+' - Order Assistant'; setNote();
+}
+function start(){
+  chat.innerHTML=''; mode=null; form=null; cur=null; renderHeader(); saveCart();
+  bot(DATA.welcome||`Namaste. ${DATA.brand} me aapka swagat hai.\n\nYahan aap nau grah ki agarbatti dekh sakte hain, rate pooch sakte hain, order ya wholesale enquiry bhej sakte hain. Neeche se chuniye ya apna sawal seedha likhiye.`);
+  showMenu();
+}
+
+/* =====================================================================
+   ADMIN PANEL
+   ===================================================================== */
+const A=$('admin'), AP=$('apanel');
+let aTab='products', aEdit=null, aOK=false;
+async function sha(s){ try{ if(window.crypto&&crypto.subtle){ const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('ng:'+s)); return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join(''); } }catch(e){} let h=5381; for(let i=0;i<s.length;i++) h=((h<<5)+h+s.charCodeAt(i))|0; return 'x'+h; }
+const lockHash = () => { const l=lsGet(LOCK); return l&&l.h||''; };
+/* logo par 5 baar jaldi-jaldi tap karne se admin khulta hai */
+let tapN=0, tapT=null;
+$('logoImg').addEventListener('click',()=>{
+  tapN++; clearTimeout(tapT); tapT=setTimeout(()=>tapN=0,2500);
+  if(tapN>=5){ tapN=0; clearTimeout(tapT); openAdmin(); }
+});
+$('logoImg').style.cursor='pointer'; $('logoImg').style.webkitUserSelect='none'; $('logoImg').style.userSelect='none'; $('logoImg').draggable=false;
+if(location.hash==='#admin') window.addEventListener('load',()=>setTimeout(openAdmin,500));
+function openAdmin(){ A.classList.remove('hidden'); aEdit=null; if(lockHash()&&!aOK) renderLogin(); else{ aOK=true; renderAdmin(); } }
+function closeAdmin(){ A.classList.add('hidden'); aOK=false; aEdit=null; renderHeader(); start(); }
+function renderLogin(){
+  AP.innerHTML=`<div class="ahead"><b>Admin Login</b><button class="abtn sm" data-a="close">✕</button></div><div class="loginbox"><label for="apw" style="font-weight:600">Admin lock password</label><input type="password" id="apw" style="width:100%;font-size:16px;padding:12px;border:1.5px solid #e4d3c3;border-radius:10px" placeholder="Password" autocomplete="current-password"><button class="abtn pri full" data-a="login">Login</button><small style="color:#7d5a35">Ye lock sirf is phone/browser par admin screen band rakhta hai. Asli security nahi hai.</small></div>`;
+  $('apw').addEventListener('keydown',e=>{ if(e.key==='Enter') ACT.login(); });
+}
+const tb = (id,l) => `<button type="button" class="${aTab===id?'on':''}" data-a="tab" data-i="${id}">${l}</button>`;
+function renderAdmin(){
+  AP.innerHTML=`<div class="ahead"><b>Admin Panel</b><button class="abtn sm" data-a="close">✕ Band karein</button></div><div class="tabs">${tb('products','Products')}${tb('faqs','Q&A')}${tb('company','Company')}${tb('backup','Backup')}</div><div class="abody">${aTab==='products'?productsView():aTab==='faqs'?faqsView():aTab==='company'?companyView():backupView()}</div>`;
+}
+const val = id => { const e=$(id); return e?e.value.trim():''; };
+const chk = id => { const e=$(id); return !!(e&&e.checked); };
+const ACT={
+  close:closeAdmin,
+  tab:i=>{ aTab=i; aEdit=null; renderAdmin(); A.scrollTop=0; },
+  login:async()=>{ if(await sha($('apw').value)===lockHash()){ aOK=true; renderAdmin(); } else alert('Galat password'); },
+  newP:()=>{ aEdit={type:'p',idx:-1,obj:cleanProduct({name:'x',category:DATA.categories[0]||'Other'},0)}; aEdit.obj.name=''; aEdit.obj.id=Math.max(0,...DATA.products.map(p=>p.id))+1; renderAdmin(); A.scrollTop=0; },
+  editP:i=>{ aEdit={type:'p',idx:+i,obj:clone(DATA.products[+i])}; renderAdmin(); A.scrollTop=0; },
+  delP:i=>{ const p=DATA.products[+i]; if(confirm(`"${p.name}" delete karein?`)){ DATA.products.splice(+i,1); cart=cart.filter(l=>getP(l.pid)); saveCart(); if(persist()) toast('Delete ho gaya'); renderAdmin(); } },
+  saveP:saveProduct, cancel:()=>{ aEdit=null; renderAdmin(); },
+  addSize:i=>{ collectForm(); const o=aEdit.obj; o.sizes=o.sizes||[]; const inch=i?normInch(i):''; if(inch&&o.sizes.some(z=>z.inch===inch)){ toast(inch+' inch pehle se jura hua hai'); return; } o.sizes.push({inch,price:null,wprice:null,minq:null}); renderAdmin(); const e=$('sz_price_'+(o.sizes.length-1)); if(e&&e.scrollIntoView) e.scrollIntoView({block:'center'}); toast((inch?inch+' inch':'Naya inch')+' jud gaya, neeche rate bharein'); },
+  delSize:i=>{ collectForm(); aEdit.obj.sizes.splice(+i,1); renderAdmin(); },
+  rmImg:()=>{ aEdit.obj.img=''; $('pf_prev').src=placeholder(aEdit.obj.name); $('pf_url').value=''; },
+  confirmAll:()=>{ if(confirm('Sabhi products ke price "confirmed" mark ho jayenge. Pehle check kar lein ki sab prices sahi hain. Aage badhein?')){ DATA.products.forEach(p=>p.confirmed=true); if(persist()) toast('Sabhi prices confirmed mark ho gaye'); renderAdmin(); } },
+  newF:()=>{ aEdit={type:'f',idx:-1,obj:{topic:'',q:'',k:[],a:''}}; renderAdmin(); A.scrollTop=0; },
+  editF:i=>{ aEdit={type:'f',idx:+i,obj:clone(DATA.faqs[+i])}; renderAdmin(); A.scrollTop=0; },
+  delF:i=>{ if(confirm('Ye sawal-jawab delete karein?')){ DATA.faqs.splice(+i,1); if(persist()) toast('Delete ho gaya'); renderAdmin(); } },
+  saveF:saveFaq, saveC:saveCompany,
+  setLock:async()=>{ const p=val('lk_pw'); if(p.length<4) return alert('Password kam se kam 4 akshar ka rakhein.'); if(lsSet(LOCK,{h:await sha(p)})){ toast('Lock lag gaya'); aOK=true; renderAdmin(); } else alert('Lock save nahi ho paya.'); },
+  rmLock:()=>{ try{ localStorage.removeItem(LOCK); }catch(e){} toast('Lock hata diya'); renderAdmin(); },
+  rmLogo:()=>{ DATA.logo=''; if(persist()) toast('Logo hata diya'); renderAdmin(); },
+  download:downloadData,
+  reset:()=>{ if(!confirm('Saare products, Q&A aur settings default par chale jayenge. Pakka?')) return; DATA=clone(DEFAULT); cart=[]; saveCart(); if(persist()) toast('Reset ho gaya'); renderAdmin(); }
+};
+AP.addEventListener('click',e=>{ const b=e.target.closest('[data-a]'); if(!b) return; const f=ACT[b.dataset.a]; if(f) f(b.dataset.i,b); });
+AP.addEventListener('change',e=>{ const id=e.target.id; if(id==='pf_file') pickImg(e.target); else if(id==='logo_file') pickLogo(e.target); else if(id==='imp_file') importData(e.target); });
+AP.addEventListener('input',e=>{ if(e.target.id==='pf_url'){ aEdit.obj.img=safeImg(e.target.value); $('pf_prev').src=aEdit.obj.img||placeholder(aEdit.obj.name); } });
+
+/* products tab */
+const stockLabel = s => s==='available'?'Available':s==='out'?'Stock me nahi':'Pata nahi / confirm karna hai';
+const opt = (v,l,sel) => `<option value="${esc(v)}"${sel?' selected':''}>${esc(l)}</option>`;
+function productsView(){
+  if(aEdit&&aEdit.type==='p') return productForm();
+  const unconf=DATA.products.filter(p=>p.price!=null&&!p.confirmed).length;
+  return `<button class="abtn pri full" data-a="newP">Naya Product Jodein</button>`+
+  (unconf?`<div class="box"><small><b>${unconf} product</b> ka price abhi "confirm hona baaki" hai. Jab tak price confirmed mark nahi hota, customer ko total nahi dikhta. Har product Edit karke tick karein, ya agar sab prices sahi hain to:</small><button class="abtn" data-a="confirmAll">✔ Sabhi prices confirmed mark karein</button></div>`:'')+
+  (DATA.products.map((p,i)=>`<div class="arow"><img src="${esc(p.img||placeholder(p.name))}" alt="" onerror="this.onerror=null;this.src=defaultLogo()"><div class="ainfo"><b>${esc(p.name)}</b><small>${esc(p.category)} • ${szs(p).length?esc(szs(p).map(z=>z.inch).join(', '))+' inch'+(p.confirmed?' ✔':' ⚠'):p.price!=null?money(p.price)+'/'+esc(p.unit)+(p.confirmed?' ✔':' ⚠'):'price nahi'}${p.omin?` • min order ${p.omin} ${esc(p.unit)}`:' • min order: set nahi'}</small></div><button class="abtn sm" data-a="editP" data-i="${i}">Edit</button><button class="abtn sm del" data-a="delP" data-i="${i}" aria-label="Delete">Delete</button></div>`).join('')||'<small>Abhi koi product nahi hai.</small>');
+}
+function productForm(){
+  const p=aEdit.obj, cats=DATA.categories.slice(); if(p.category&&!cats.includes(p.category)) cats.push(p.category); p.sizes=p.sizes||[];
+  return `<h3>${aEdit.idx<0?'Naya Product':'Product Edit Karein'}</h3>
+  <div class="btnrow"><button class="abtn pri" data-a="saveP">Save</button><button class="abtn" data-a="cancel">Cancel</button></div>
+  <label for="pf_name">Product ka naam *</label><input id="pf_name" value="${esc(p.name)}" maxlength="80">
+  <label for="pf_cat">Category</label><select id="pf_cat">${cats.map(c=>opt(c,c,c===p.category)).join('')}</select>
+  <input id="pf_catnew" placeholder="ya nayi category ka naam likhein" maxlength="40" aria-label="Nayi category">
+  <label for="pf_desc">Description / Details</label><textarea id="pf_desc" maxlength="500">${esc(p.desc)}</textarea>
+  <label for="pf_smell">Khushbu</label><input id="pf_smell" value="${esc(p.smell)}">
+  <label for="pf_pack">Packet size / packing details</label><input id="pf_pack" value="${esc(p.pack)}" placeholder="1 Packet = 20 sticks">
+  <label for="pf_unit">Price kis unit ke hisaab se hai</label><select id="pf_unit">${UNITS.map(u=>opt(u,u,u===p.unit)).join('')}</select>
+  <div class="grid2"><div><label for="pf_price">Retail price (₹)</label><input id="pf_price" type="number" step="any" min="0" inputmode="decimal" value="${p.price==null?'':p.price}"></div>
+  <div><label for="pf_wprice">Wholesale price (₹)</label><input id="pf_wprice" type="number" step="any" min="0" inputmode="decimal" value="${p.wprice==null?'':p.wprice}"></div></div>
+  <label for="pf_minq">Wholesale ke liye minimum quantity (agar tay hai)</label><input id="pf_minq" type="number" step="any" min="0" inputmode="decimal" value="${p.minq==null?'':p.minq}">
+  <div class="box"><b>Customer ke liye order quantity</b><small>Yahan likhi quantity se kam customer cart me nahi jod payega. Aur quantity ke jo quick buttons customer ko dikhein, wo bhi yahin se set hote hain. Dono khali chhodein to pehle jaise 1, 2, 5, 10, 20 dikhenge.</small>
+  <label for="pf_omin">Kam se kam order quantity (upar chuni hui unit me)</label><input id="pf_omin" type="number" step="any" min="0" inputmode="decimal" value="${p.omin==null?'':p.omin}" placeholder="jaise 40">
+  <label for="pf_qopts">Quantity ke quick buttons (comma se alag)</label><input id="pf_qopts" value="${esc((p.qopts||[]).join(', '))}" placeholder="jaise 40, 80, 100, 200">
+  <small>Buttons khali chhodein aur sirf kam se kam quantity bharein to buttons apne aap bante hain (jaise 40, 80, 120, 200, 400).</small></div>
+  ${sizesBox(p)}
+  <label class="chk"><input type="checkbox" id="pf_conf"${p.confirmed?' checked':''}> Ye price confirmed hai (tick tabhi karein jab price pakka ho)</label>
+  <small>Tick nahi karenge to customer ko price "confirm hona baaki" dikhega aur total calculate nahi hoga.</small>
+  <label for="pf_stock">Stock status</label><select id="pf_stock">${['unknown','available','out'].map(s=>opt(s,stockLabel(s),s===p.stock)).join('')}</select>
+  <label for="pf_alias">Customer ye shabd likhe to ye product mile (comma se alag)</label><input id="pf_alias" value="${esc((p.alias||[]).join(', '))}" placeholder="surya, sun, suraj">
+  <label>Product ki asli photo</label>
+  <img id="pf_prev" class="prev" src="${esc(p.img||placeholder(p.name))}" alt="Photo preview" onerror="this.onerror=null;this.src=defaultLogo()">
+  <input type="file" id="pf_file" accept="image/*" aria-label="Photo chuniye">
+  <small>Phone se photo chunein, apne aap chhoti ho jayegi. Sirf asli product ki photo lagayein.</small>
+  <label for="pf_url">ya image ka link / file ka naam (jaise images/surya.jpg)</label><input id="pf_url" value="${esc(p.img&&!p.img.startsWith('data:')?p.img:'')}" placeholder="https://... ya images/surya.jpg">
+  <div class="btnrow"><button class="abtn" data-a="rmImg">Photo hatayein</button></div>
+  <div class="btnrow"><button class="abtn pri" data-a="saveP">Save</button><button class="abtn" data-a="cancel">Cancel</button></div>`;
+}
+function sizesBox(p){
+  const rows=(p.sizes||[]).map((z,i)=>`<div class="szcard"><div class="grid2"><div><label for="sz_inch_${i}">Inch</label><input id="sz_inch_${i}" value="${esc(z.inch)}" maxlength="10" inputmode="decimal" placeholder="jaise 9"></div><div style="align-self:end"><button type="button" class="abtn sm del" data-a="delSize" data-i="${i}">Ye inch hatayein</button></div></div><div class="grid2"><div><label for="sz_price_${i}">Retail (₹)</label><input id="sz_price_${i}" type="number" step="any" min="0" inputmode="decimal" value="${z.price==null?'':z.price}"></div><div><label for="sz_wprice_${i}">Wholesale (₹)</label><input id="sz_wprice_${i}" type="number" step="any" min="0" inputmode="decimal" value="${z.wprice==null?'':z.wprice}"></div></div><label for="sz_minq_${i}">Wholesale ke liye minimum quantity (is inch ke liye)</label><input id="sz_minq_${i}" type="number" step="any" min="0" inputmode="decimal" value="${z.minq==null?'':z.minq}"></div>`).join('');
+  return `<div class="box"><b>Inch / size (optional)</b><small>Agar ye product alag-alag inch me hai (jaise 6, 9, 12 inch), to yahan har inch jodein aur har inch ka apna rate likhein. Customer ko saare inch dikhenge aur cart me jodte waqt wo inch chunega. <b>Inch jodne par upar wala Retail / Wholesale price use nahi hoga</b>, har inch ka price yahin se lagega. Inch na jodein to product ek hi size ka rahega.</small>${rows}<div class="btnrow">${[1,1.5,2,3,6,8,9,10,12].map(n=>`<button type="button" class="abtn sm" data-a="addSize" data-i="${n}">+ ${n} inch</button>`).join('')}<button type="button" class="abtn sm" data-a="addSize">+ Dusra inch</button></div></div>`;
+}
+function collectForm(){
+  const o=aEdit&&aEdit.obj; if(!o||!$('pf_name')) return;
+  const g=id=>$(id)?$(id).value.trim():'', n=id=>{ const v=g(id); if(v==='') return null; const x=Number(v); return isFinite(x)&&x>=0?x:null; };
+  o.name=g('pf_name'); o.category=g('pf_catnew')||g('pf_cat')||o.category; o.desc=g('pf_desc'); o.smell=g('pf_smell'); o.pack=g('pf_pack'); o.unit=g('pf_unit')||o.unit;
+  o.price=n('pf_price'); o.wprice=n('pf_wprice'); o.minq=n('pf_minq'); o.omin=n('pf_omin'); o.qopts=g('pf_qopts').split(',').map(x=>Number(x.trim())).filter(x=>x>0); o.confirmed=chk('pf_conf'); o.stock=g('pf_stock')||o.stock;
+  o.alias=g('pf_alias').split(',').map(x=>x.trim().toLowerCase()).filter(Boolean);
+  const u=g('pf_url'); if(u&&safeImg(u)) o.img=safeImg(u);
+  o.sizes=(o.sizes||[]).map((z,i)=>$('sz_inch_'+i)?{inch:g('sz_inch_'+i),price:n('sz_price_'+i),wprice:n('sz_wprice_'+i),minq:n('sz_minq_'+i)}:z);
+}
+function fileToDataUrl(file,cb,max,type){
+  max=max||640; type=type||'image/jpeg';
+  const fr=new FileReader();
+  fr.onerror=()=>alert('File padh nahi paaye, doosri try karein.');
+  fr.onload=()=>{ const im=new Image(); im.onload=()=>{ const s=Math.min(1,max/Math.max(im.width,im.height)), w=Math.max(1,Math.round(im.width*s)), h=Math.max(1,Math.round(im.height*s)); const c=document.createElement('canvas'); c.width=w; c.height=h; const x=c.getContext('2d'); if(type==='image/jpeg'){ x.fillStyle='#fff'; x.fillRect(0,0,w,h); } x.drawImage(im,0,0,w,h); cb(c.toDataURL(type,0.72)); }; im.onerror=()=>alert('Ye image khul nahi paayi, doosri try karein.'); im.src=fr.result; };
+  fr.readAsDataURL(file);
+}
+function pickImg(el){ const f=el.files&&el.files[0]; if(!f) return; fileToDataUrl(f,url=>{ aEdit.obj.img=url; $('pf_prev').src=url; $('pf_url').value=''; }); }
+function numField(id,label){ const v=val(id); if(v==='') return null; const n=Number(v); if(!isFinite(n)||n<0){ alert(label+' sahi number me likhein (0 ya usse zyada).'); return undefined; } return n; }
+function saveProduct(){
+  const o=aEdit.obj;
+  o.name=val('pf_name'); if(!o.name) return alert('Product ka naam likhna zaroori hai.');
+  const rp=numField('pf_price','Retail price'); if(rp===undefined) return;
+  const wp=numField('pf_wprice','Wholesale price'); if(wp===undefined) return;
+  const mq=numField('pf_minq','Minimum quantity'); if(mq===undefined) return;
+  o.price=rp; o.wprice=wp; o.minq=mq; o.confirmed=chk('pf_conf');
+  const sizes=[], seenSz=new Set(), szCount=(o.sizes||[]).length;
+  for(let i=0;i<szCount;i++){
+    const inch=normInch(val('sz_inch_'+i)), a=numField('sz_price_'+i,'Inch ka retail price'), b=numField('sz_wprice_'+i,'Inch ka wholesale price'), c=numField('sz_minq_'+i,'Inch ki minimum quantity');
+    if(a===undefined||b===undefined||c===undefined) return;
+    if(!inch){ if(a==null&&b==null&&c==null) continue; return alert('Har size wali row me inch likhna zaroori hai (ya wo row hatayein).'); }
+    if(seenSz.has(inch)) return alert(inch+' inch do baar likha hai. Ek hi baar rakhein.');
+    seenSz.add(inch); sizes.push({inch,price:a,wprice:b,minq:c});
+  }
+  o.sizes=sizes;
+  const om=numField('pf_omin','Kam se kam order quantity'); if(om===undefined) return;
+  if(om!==null&&!(om>0)) return alert('Kam se kam order quantity 0 se zyada honi chahiye, ya khali chhodein.');
+  const qo=[]; for(const t of val('pf_qopts').split(',').map(x=>x.trim()).filter(Boolean)){
+    const n=Number(t);
+    if(!isFinite(n)||n<=0) return alert('Quick buttons me sirf number likhein, comma se alag (jaise 40, 80, 100). "'+t+'" sahi nahi hai.');
+    if(val('pf_unit')!=='kg'&&!Number.isInteger(n)) return alert('Is unit me quick buttons poori sankhya me hone chahiye ("'+t+'" sahi nahi).');
+    if(om&&n<om) return alert(n+' kam se kam order quantity ('+om+') se chhota hai. Use hatayein ya bada karein.');
+    if(!qo.includes(n)) qo.push(n);
+  }
+  o.omin=om; o.qopts=qo.slice(0,8);
+  const anyPrice=sizes.length?sizes.some(z=>z.price!=null||z.wprice!=null):(rp!=null||wp!=null);
+  if(o.confirmed&&!anyPrice) return alert('Price confirmed tick kiya hai, par koi price nahi bhara. Price bharein ya tick hatayein.');
+  const cn=val('pf_catnew'); o.category=cn||val('pf_cat')||'Other';
+  if(!DATA.categories.some(c=>c.toLowerCase()===o.category.toLowerCase())) DATA.categories.push(o.category);
+  o.desc=val('pf_desc'); o.smell=val('pf_smell'); o.pack=val('pf_pack'); o.unit=val('pf_unit'); o.stock=val('pf_stock');
+  o.alias=val('pf_alias').split(',').map(s=>s.trim().toLowerCase()).filter(Boolean);
+  const u=val('pf_url'); if(u&&!safeImg(u)) return alert('Image link sahi nahi hai. https:// wala link ya file ka naam (jaise images/surya.jpg) likhein.');
+  if(aEdit.idx<0) DATA.products.push(o); else DATA.products[aEdit.idx]=o;
+  if(persist()){ aEdit=null; toast('Save ho gaya'+(o.omin?` — kam se kam order ${o.omin} ${o.unit}`:' (kam se kam order set nahi)')); renderAdmin(); A.scrollTop=0; }
+}
+
+/* Q&A tab */
+function faqsView(){
+  if(aEdit&&aEdit.type==='f') return faqForm();
+  return `<small>Yahan customer ke sawal aur jawab jodein. Jab tak jawab khali hai, bot us sawal par kuch nahi banayega — "company se puchhiye" kahega. Products, photos aur prices catalogue se apne aap aate hain.</small><button class="abtn pri full" data-a="newF">Naya Sawal-Jawab</button>`+
+  DATA.faqs.map((f,i)=>`<div class="arow"><div class="ainfo"><b>${esc(f.q)}</b><small>${f.a?esc(f.a):'⚠ jawab baaki hai'}</small></div><button class="abtn sm" data-a="editF" data-i="${i}">Edit</button><button class="abtn sm del" data-a="delF" data-i="${i}" aria-label="Delete">Delete</button></div>`).join('');
+}
+function faqForm(){
+  const f=aEdit.obj;
+  return `<h3>${aEdit.idx<0?'Naya Sawal-Jawab':'Sawal-Jawab Edit'}</h3>
+  <label for="ff_q">Sawal *</label><input id="ff_q" value="${esc(f.q)}" maxlength="200">
+  <label for="ff_k">Keywords (comma se alag) — customer ye shabd likhe to jawab mile</label><input id="ff_k" value="${esc((f.k||[]).join(', '))}" placeholder="delivery, kitne din, shipping">
+  <label for="ff_a">Jawab (sirf wahi likhein jo company ne confirm kiya ho)</label><textarea id="ff_a" maxlength="1500">${esc(f.a)}</textarea>
+  <div class="btnrow"><button class="abtn pri" data-a="saveF">Save</button><button class="abtn" data-a="cancel">Cancel</button></div>`;
+}
+function saveFaq(){
+  const o=aEdit.obj; o.q=val('ff_q'); o.a=val('ff_a');
+  if(!o.q) return alert('Sawal likhna zaroori hai.');
+  o.k=val('ff_k').split(',').map(s=>s.trim().toLowerCase()).filter(Boolean);
+  if(aEdit.idx<0) DATA.faqs.push(o); else DATA.faqs[aEdit.idx]=o;
+  if(persist()){ aEdit=null; toast('Save ho gaya '); renderAdmin(); A.scrollTop=0; }
+}
+
+/* company tab */
+function companyView(){
+  const d=DATA.delivery, hasLock=!!lockHash();
+  return `<h3>Company aur settings</h3>
+  <label>Logo (header me dikhegi)</label><img class="prev" style="max-height:110px;object-fit:contain;background:#fbf6ec" src="${esc(DATA.logo||'logo.png')}" onerror="this.onerror=null;this.src=defaultLogo()" alt="Logo">
+  <input type="file" id="logo_file" accept="image/*" aria-label="Logo chuniye"><button class="abtn sm" data-a="rmLogo">Logo hatayein</button>
+  <label for="s_brand">Brand / company ka naam</label><input id="s_brand" value="${esc(DATA.brand)}" maxlength="60">
+  <label for="s_owner">Company ka WhatsApp number (orders yahin aayenge)</label><input id="s_owner" value="${esc(DATA.owner)}" inputmode="numeric" placeholder="918329323516">
+  <label for="s_about">Company ke baare me (approved jaankari)</label><textarea id="s_about">${esc(DATA.about)}</textarea>
+  <label for="s_address">Address</label><input id="s_address" value="${esc(DATA.address)}">
+  <label for="s_hours">Business hours</label><input id="s_hours" value="${esc(DATA.hours)}" placeholder="Somvar-Shanivar, subah 10 se shaam 6">
+  <label for="s_areas">Kin shehar / state me supply karte hain (comma se alag, agar tay hai)</label><input id="s_areas" value="${esc(DATA.areas)}" placeholder="Nagpur, Pune, Mumbai">
+  <div class="box"><b>Wholesale / bulk quantity</b>
+    <small>Wholesale enquiry me customer ko isi range me quantity likhni hogi. Box ka vajan yahan se badal sakte hain.</small>
+    <div class="grid2"><div><label for="s_minkg">Kam se kam (kg)</label><input id="s_minkg" type="number" step="any" min="0" inputmode="decimal" value="${DATA.bulk.minKg}"></div>
+    <div><label for="s_maxkg">Zyada se zyada (kg)</label><input id="s_maxkg" type="number" step="any" min="0" inputmode="decimal" value="${DATA.bulk.maxKg}"></div></div>
+    <label for="s_boxkg">1 box me kitne kg</label><input id="s_boxkg" type="number" step="any" min="0" inputmode="decimal" value="${DATA.bulk.boxKg}"></div>
+  <label for="s_cats">Product categories (comma se alag)</label><textarea id="s_cats" style="min-height:60px">${esc(DATA.categories.join(', '))}</textarea>
+  <div class="box"><b>Delivery charge</b>
+    <label for="s_dst">Status</label><select id="s_dst">${opt('no','Confirm nahi (company WhatsApp par batayegi)',!d.confirmed)}${opt('yes','Confirmed (total me jodi jayegi)',d.confirmed)}</select>
+    <label for="s_damt">Charge (₹) — sirf confirmed hone par</label><input id="s_damt" type="number" step="any" min="0" inputmode="decimal" value="${d.amount==null?'':d.amount}">
+    <label for="s_dnote">Note (jaise "10 kg tak")</label><input id="s_dnote" value="${esc(d.note)}"></div>
+  <label for="s_welcome">Welcome message (khali chhodein to default)</label><textarea id="s_welcome">${esc(DATA.welcome)}</textarea>
+  <div class="box"><b>AI connection (optional)</b>
+    <small>AI ke bina bot poori tarah chalta hai. Real AI ke liye alag server-side proxy chahiye. Yahan sirf uska https link daalein. <b>API key kabhi yahan na daalein.</b></small>
+    <label for="s_ai">AI proxy ka link</label><input id="s_ai" value="${esc(DATA.aiEndpoint)}" placeholder="https://navgrah-ai.aapka-naam.workers.dev">
+    <label class="chk"><input type="checkbox" id="s_aion"${DATA.aiEnabled?' checked':''}> AI chalu karein (band ho to rule-based mode)</label></div>
+  <button class="abtn pri full" data-a="saveC">Save Karein</button>
+  <div class="box"><b>Admin lock (sirf is phone ke liye)</b>
+    <small>${hasLock?'Lock laga hua hai.':'Abhi lock nahi hai — koi bhi dabakar admin khol sakta hai (par uska badlav sirf uske apne phone par dikhega).'} Ye asli security nahi hai; sirf galti se badlav rokta hai.</small>
+    <input id="lk_pw" type="password" placeholder="Naya password (4+ akshar)" autocomplete="new-password" aria-label="Naya password">
+    <div class="btnrow"><button class="abtn" data-a="setLock">Lock lagayein / badlein</button>${hasLock?'<button class="abtn del" data-a="rmLock">Lock hatayein</button>':''}</div></div>`;
+}
+function saveCompany(){
+  const n=val('s_owner').replace(/\D/g,''); if(n.length<10) return alert('Sahi WhatsApp number likhein (10 digit, ya 91 ke saath).');
+  const ai=val('s_ai'); if(ai&&!validUrl(ai)) return alert('AI link https:// se shuru hona chahiye.');
+  const dconf=val('s_dst')==='yes', damt=numField('s_damt','Delivery charge'); if(damt===undefined) return;
+  if(dconf&&damt==null) return alert('Delivery charge "confirmed" hai to amount bharein (free ho to 0 likhein).');
+  const mnk=numField('s_minkg','Kam se kam kg'), mxk=numField('s_maxkg','Zyada se zyada kg'), bxk=numField('s_boxkg','Box ka vajan'); if(mnk===undefined||mxk===undefined||bxk===undefined) return;
+  if(!(mnk>0)||!(mxk>0)||!(bxk>0)) return alert('Kam se kam kg, zyada se zyada kg aur box ka vajan teeno 0 se zyada hone chahiye.');
+  if(mxk<mnk) return alert('Zyada se zyada kg, kam se kam kg se chhota nahi ho sakta.');
+  DATA.bulk={minKg:mnk,maxKg:mxk,boxKg:bxk};
+  DATA.owner=n.length===10?'91'+n:n; DATA.brand=val('s_brand')||'Navgrah Agarbatti Udyog'; DATA.about=val('s_about'); DATA.address=val('s_address'); DATA.hours=val('s_hours'); DATA.areas=val('s_areas'); DATA.welcome=val('s_welcome');
+  DATA.delivery={confirmed:dconf,amount:damt,note:val('s_dnote')};
+  const cats=val('s_cats').split(',').map(s=>s.trim()).filter(Boolean);
+  DATA.products.forEach(p=>{ if(!cats.some(c=>c.toLowerCase()===p.category.toLowerCase())) cats.push(p.category); });
+  DATA.categories=[...new Set(cats)];
+  DATA.aiEndpoint=ai; DATA.aiEnabled=chk('s_aion')&&!!ai; aiDead=false;
+  if(persist()){ renderHeader(); toast('Save ho gaya '); renderAdmin(); }
+}
+function pickLogo(el){ const f=el.files&&el.files[0]; if(!f) return; fileToDataUrl(f,url=>{ DATA.logo=url; if(persist()){ renderHeader(); toast('Logo save ho gaya '); renderAdmin(); } },300,'image/png'); }
+
+/* backup tab */
+function backupView(){
+  let sz=0; try{ sz=Math.round(JSON.stringify(DATA).length/1024); }catch(e){}
+  return `<h3>Backup aur customers tak data pahunchana</h3>
+  <div class="box"><b>Data kahan save hota hai?</b>
+   <small>• <b>Admin ke badlav</b> (products, prices, Q&A, photos) is phone ke browser me save hote hain (abhi ~${sz} KB). Dusre phone/customer ko ye tab tak nahi dikhte jab tak aap neeche wali file website par upload na karein.<br>
+   • <b>Sab customers ko dikhne wala data</b> website ki <code>data.json</code> file se aata hai (aap upload karte hain).<br>
+   • <b>Customer ke naam, number, order</b> kahin save nahi hote. Wo sirf WhatsApp message me jaate hain jo customer khud bhejta hai.<br>
+   • <b>AI mode chalu ho</b> to customer ka chat text AI proxy server ko jaata hai (8+ digit ke number hata diye jaate hain). AI band ho to kuch bahar nahi jaata.<br>
+   • Is bot ka koi central server/database nahi hai.</small></div>
+  <button class="abtn pri full" data-a="download">⬇ data.json download karein</button>
+  <small>Is file me password ya koi secret nahi hota. Ise website par <code>index.html</code> ke saath wale folder me upload karein (naam data.json hi rahe). Photos bahut hon to file badi ho sakti hai — behtar hai photos ko <code>images</code> folder me rakhkar product me file ka naam (images/surya.jpg) likhein.</small>
+  <label for="imp_file">Purani backup (data.json) wapas laayein</label><input id="imp_file" type="file" accept=".json,application/json">
+  <button class="abtn del full" data-a="reset">Sab kuch default par reset karein</button>`;
+}
+function downloadData(){
+  DATA.updated=Date.now(); lsSet(LS,DATA);
+  const blob=new Blob([JSON.stringify(DATA)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='data.json'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+  toast('data.json download ho rahi hai');
+}
+function importData(el){
+  const f=el.files&&el.files[0]; if(!f) return;
+  const fr=new FileReader();
+  fr.onload=()=>{ try{ const s=sanitize(JSON.parse(fr.result)); if(!s) throw 0; s.updated=Date.now(); DATA=s; cart=cart.filter(l=>getP(l.pid)); saveCart(); if(persist()) alert('Data wapas aa gaya ('+DATA.products.length+' products)'); renderAdmin(); }catch(e){ alert('Ye sahi data.json file nahi lag rahi. Kuch badla nahi gaya.'); } el.value=''; };
+  fr.onerror=()=>alert('File padh nahi paaye.');
+  fr.readAsText(f);
+}
+
+/* ---------- boot ---------- */
+loadData().then(start).catch(e=>{ console.error(e); start(); });
+</script>
+</body>
+</html>
